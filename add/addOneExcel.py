@@ -35,12 +35,13 @@ class AddOneExecle(MainQuit):
         root = Tk()
         root.title("保存数据到exle")
         root.config(bg="light gray")
-        root.geometry("640x540")  # 设置窗口大小
+        root.geometry("640x600")  # 设置窗口大小
         mFont = 10
         mSticky = W + E + S + N
         mWraplength = 300,
         mRlief = "groove"
         rowNum=0
+        showContext:Label
         Label(master=root, text="现有Excel:", font=mFont, relief=mRlief).grid(row=rowNum, column=0, sticky=mSticky,
                                                                                   pady=4)
         selectExcelTV = Label(master=root, text="excel的地址", font=mFont,
@@ -89,17 +90,23 @@ class AddOneExecle(MainQuit):
 
         rowNum += 1
         Button(master=root, text="清空列One和Two", font=mFont, relief=mRlief,
-               command=lambda: self.clearOneTwo(createNameOneEt,createNameTwoEt)).grid(row=rowNum, column=0,columnspan=3, sticky=mSticky,
+               command=lambda: self.clearOneTwo(createNameOneEt,createNameTwoEt,showContext)).grid(row=rowNum, column=0,columnspan=3, sticky=mSticky,
                                                                   pady=4)
 
         rowNum += 1
+        Button(master=root, text="查询", font=mFont, relief=mRlief,
+               command=lambda: self.queryList(selectExcelTV,createExcelFileTV,createNameEt,createNameOneEt,createNameTwoEt,showContext)).grid(row=rowNum, column=0,columnspan=3, sticky=mSticky,
+                                                                  pady=4)
+        rowNum += 1
         Button(master=root, text="添加", font=mFont, relief=mRlief,
-               command=lambda: self.addSaveExcle(selectExcelTV,createExcelFileTV,createNameEt,createNameOneEt,createNameTwoEt)).grid(row=rowNum, column=0,columnspan=3, sticky=mSticky,
+               command=lambda: self.addSaveExcle(selectExcelTV,createExcelFileTV,createNameEt,createNameOneEt,createNameTwoEt,showContext)).grid(row=rowNum, column=0,columnspan=3, sticky=mSticky,
                                                                   pady=4)
         rowNum += 1
         Label(master=root,text="提示：默认优选添加到现有excele,默认表一,,其次是新建excele",font=mFont).grid(row=rowNum,column=0,columnspan=3,sticky=mSticky,pady=4)
 
-
+        rowNum += 1
+        showContext=Label(master=root,height=10,font=mFont,wraplength=600,bg="light green")
+        showContext.grid(row=rowNum,column=0,columnspan=3,sticky=mSticky,pady=4)
 
         self.registLisetener(root, mainRoot)
         mainloop()
@@ -109,16 +116,17 @@ class AddOneExecle(MainQuit):
 
 
 
-    def clearOneTwo(self, createNameOneEt, createNameTwoEt):
+    def clearOneTwo(self, createNameOneEt, createNameTwoEt,showContext):
         createNameTwoEt.delete(0,"end")
         createNameOneEt.delete(0,"end")
+        self.setTvContext(showContext,"")
         pass
     #selectExcelTV 现有的excel
     #createExcelFileTV 创建的excle目录
     #createNameEt 创建的名称
     #createNameOneEt one 数据
     #createNameTwoEt two 数据
-    def addSaveExcle(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt):
+    def addSaveExcle(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt,showContext):
         #现有的数据
 
         try:
@@ -145,7 +153,8 @@ class AddOneExecle(MainQuit):
             #创建新表添加数据
                 savePath=createPath+"/"+createSheetName+".xlsx"
                 if os.path.exists(savePath):
-                    messagebox.showwarning("温馨提示",f"{savePath},文件已经存在")
+                    self.setTvContext(showContext,f"温馨提示\n  {savePath},文件已经存在")
+                    #messagebox.showwarning("温馨提示",f"{savePath},文件已经存在")
                     return
 
                 wb = Workbook()
@@ -155,11 +164,13 @@ class AddOneExecle(MainQuit):
                 pass
             oneData = createNameOneEt.get()
             if oneData is None or oneData =="":
-                messagebox.showwarning("温馨提示","列One 数据为空")
+                self.setTvContext(showContext, f"温馨提示\n  列One 数据为空")
+                #messagebox.showwarning("温馨提示","列One 数据为空")
                 return
             twoData = createNameTwoEt.get()
             if twoData is None or twoData=="":
-                messagebox.showwarning("温馨提示", "列Two 数据为空")
+                self.setTvContext(showContext, f"温馨提示\n  列Two 数据为空")
+                #messagebox.showwarning("温馨提示", "列Two 数据为空")
                 return
            #=========判断是否重复============
             if isrep:
@@ -167,41 +178,126 @@ class AddOneExecle(MainQuit):
                 #maxcolumn = sh.max_column#列
                 #maxrow = sh.max_row #行
                 #第一列数据
+                # oneSheetData = sh.iter_cols(1, 1, values_only=True)
+                # mOneList=[]
+                # for item in oneSheetData:
+                #     if item is not  None:
+                #         for itemA in item:
+                #             if itemA is not  None:
+                #                 mOneList.append(itemA)
+                # print(f"oneList=={mOneList}")
+                # if mOneList.__len__()!=0 :
+                #     if oneData in mOneList:
+                #         self.setTvContext(showContext, f"温馨提示\n  数据One{oneData}数据重复")
+                #         #messagebox.showwarning("温馨提示",f"数据One{oneData}数据重复")
+                #         return
+                #
+                # # 第一列数据
+                # twoSheetData = sh.iter_cols(2, 2, values_only=True)
+                # mTwoList = []
+                # for item in twoSheetData:
+                #     if item is not None:
+                #         for itemA in item:
+                #             if itemA is not None:
+                #                 mTwoList.append(itemA)
+                # print(f"twoList=={mTwoList}")
+                # if mTwoList.__len__()!=0:
+                #     if twoData in mTwoList:
+                #         self.setTvContext(showContext, f"温馨提示\n  数据Two{twoData}数据重复")
+                #         #messagebox.showwarning("温馨提示", f"数据Two{twoData}数据重复")
+                mAlllist = []
                 oneSheetData = sh.iter_cols(1, 1, values_only=True)
-                mOneList=[]
                 for item in oneSheetData:
-                    if item is not  None:
+                    if item is not None:
                         for itemA in item:
-                            if itemA is not  None:
-                                mOneList.append(itemA)
-                print(f"oneList=={mOneList}")
-                if mOneList.__len__()!=0 :
-                    if oneData in mOneList:
-                        messagebox.showwarning("温馨提示",f"数据One{oneData}数据重复")
-                        return
-
-                # 第一列数据
+                            if itemA is not None:
+                                mAlllist.append(itemA)
+                # 第2列数据
                 twoSheetData = sh.iter_cols(2, 2, values_only=True)
-                mTwoList = []
                 for item in twoSheetData:
                     if item is not None:
                         for itemA in item:
                             if itemA is not None:
-                                mTwoList.append(itemA)
-                print(f"twoList=={mTwoList}")
-                if mTwoList.__len__()!=0:
-                    if twoData in mTwoList:
-                        messagebox.showwarning("温馨提示", f"数据Two{twoData}数据重复")
-                        return
+                                mAlllist.append(itemA)
+                print(f"mall=={mAlllist}")
+                if mAlllist.__len__() == 0:
+                    self.setTvContext(showContext,
+                                      f"温馨提示\n========Success========\n数据数据one={oneData}\n 数据two={twoData}可以添加")
+                    return
+                if oneData != "" and oneData in mAlllist:
+                    self.setTvContext(showContext, f"温馨提示\n========Error========\n数据列One={oneData}数据重复")
+                    return
+                if twoData != "" and twoData in mAlllist:
+                    self.setTvContext(showContext, f"温馨提示\n========Error========\n数据列two{twoData}数据重复")
+                    return
+                # self.setTvContext(showContext, f"温馨提示\n========Success========\n数据{oneData}{twoData}可以添加")
                         #=============保存=============
             sh.cell(row=rowsOne , column=1).value = f"{oneData}"
             sh.cell(row=rowsOne , column=2).value = f"{twoData}"
 
             wb.save(savePath)
             wb.close()
-            messagebox.showinfo("温馨提示", f"要保存的文件{savePath}成功")
+            self.setTvContext(showContext, f"温馨提示\n =======Success========\n 要保存的文件{savePath}成功")
+            #messagebox.showinfo("温馨提示", f"要保存的文件{savePath}成功")
         except:
-            messagebox.showerror("温馨提示", f"要保存的文件{savePath}正在打开，或者异常，请关闭重试")
+            self.setTvContext(showContext, f"温馨提示\n 要保存的文件{savePath}正在打开，或者异常，请关闭重试")
+            #messagebox.showerror("温馨提示", f"要保存的文件{savePath}正在打开，或者异常，请关闭重试")
 
 
             pass
+    def setTvContext(self,shwoContxt:Label,strContxt:str):
+        shwoContxt.config(text=strContxt)
+        pass
+
+    def queryList(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext):
+        selecetExcele = selectExcelTV.cget("text")
+        wb: Workbook = None
+        sh: Worksheet = None
+        if selecetExcele != "excel的地址":
+            wb = load_workbook(selecetExcele)
+            mOnesheetnames = wb.sheetnames
+            print(f"{mOnesheetnames}")
+            sheetOne = mOnesheetnames[0]
+            sh = wb[sheetOne]
+            print(f"{mOnesheetnames}//{sh}//{sh.max_row}")
+            pass
+        else:
+            self.setTvContext(showContext, "温馨提示\n   请选择要查询的Excele")
+            return
+        oneData = createNameOneEt.get()
+        twoData = createNameTwoEt.get()
+
+        if oneData=="" and twoData=="":
+            self.setTvContext(showContext,"温馨提示\n   列表One 或者列表two 不能都为空")
+            return
+        # =========判断是否重复============
+        sh_rows = sh.rows
+        # maxcolumn = sh.max_column#列
+        # maxrow = sh.max_row #行
+        # 第一列数据
+        mAlllist=[]
+        oneSheetData = sh.iter_cols(1, 1, values_only=True)
+        for item in oneSheetData:
+            if item is not None:
+                for itemA in item:
+                    if itemA is not None:
+                        mAlllist.append(itemA)
+        # 第2列数据
+        twoSheetData = sh.iter_cols(2, 2, values_only=True)
+        for item in twoSheetData:
+            if item is not None:
+                for itemA in item:
+                    if itemA is not None:
+                        mAlllist.append(itemA)
+        print(f"mall=={mAlllist}")
+        if mAlllist.__len__()==0:
+            self.setTvContext(showContext,f"温馨提示\n========Success========\n数据数据one={oneData}\n 数据two={twoData}可以添加")
+            return
+        if oneData!="" and oneData in mAlllist:
+            self.setTvContext(showContext,f"温馨提示\n========Error========\n数据列One={oneData}数据重复")
+            return
+        if twoData != "" and twoData in mAlllist:
+            self.setTvContext(showContext, f"温馨提示\n========Error========\n数据列two{twoData}数据重复")
+            return
+        self.setTvContext(showContext, f"温馨提示\n========Success========\n数据{oneData}\n{twoData}可以添加")
+        pass

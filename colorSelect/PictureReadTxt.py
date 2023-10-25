@@ -12,7 +12,7 @@ from Base.MainQuit import MainQuit
 from tkinter import  filedialog
 
 from PIL import Image
-import cv2
+
 
 class PictureReadTxt(MainQuit):
 
