@@ -299,5 +299,5 @@ class AddOneExecle(MainQuit):
         if twoData != "" and twoData in mAlllist:
             self.setTvContext(showContext, f"温馨提示\n========Error========\n数据列two{twoData}数据重复")
             return
-        self.setTvContext(showContext, f"温馨提示\n========Success========\n数据{oneData}\n{twoData}可以添加")
+        self.setTvContext(showContext, f"温馨提示\n========Success========\n{oneData}\n{twoData}可以添加")
         pass
