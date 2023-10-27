@@ -5,6 +5,7 @@
 # @File    : addOneExcel.py
 # @Description : $
 import os
+from base64 import encode, decode
 from tkinter import Tk, filedialog, messagebox
 from tkinter import *
 
@@ -13,6 +14,9 @@ from openpyxl.worksheet.worksheet import Worksheet
 
 from Base.FileDialogType import FileDialogType
 from Base.MainQuit import MainQuit
+import win32clipboard
+
+from Base.TypeBgColor import TypeBgColor
 
 
 class AddOneExecle(MainQuit):
@@ -102,10 +106,19 @@ class AddOneExecle(MainQuit):
                command=lambda: self.addSaveExcle(selectExcelTV,createExcelFileTV,createNameEt,createNameOneEt,createNameTwoEt,showContext)).grid(row=rowNum, column=0,columnspan=3, sticky=mSticky,
                                                                   pady=4)
         rowNum += 1
+        Button(master=root, text="粘贴One", font=mFont, relief=mRlief,
+               command=lambda: self.postadd(selectExcelTV,createExcelFileTV,createNameEt,createNameOneEt,createNameTwoEt,showContext)).grid(row=rowNum, column=0, sticky=mSticky,
+                                                                  pady=4)
+        Button(master=root, text="粘贴Two", font=mFont, relief=mRlief,
+               command=lambda: self.postaddTwo(selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt,
+                                            createNameTwoEt, showContext)).grid(row=rowNum, column=2,
+                                                                                sticky=mSticky,
+                                                                                pady=4)
+        rowNum += 1
         Label(master=root,text="提示：默认优选添加到现有excele,默认表一,,其次是新建excele",font=mFont).grid(row=rowNum,column=0,columnspan=3,sticky=mSticky,pady=4)
 
         rowNum += 1
-        showContext=Label(master=root,height=10,font=mFont,wraplength=600,bg="light green")
+        showContext=Label(master=root,height=10,font=mFont,wraplength=600,bg="light blue")
         showContext.grid(row=rowNum,column=0,columnspan=3,sticky=mSticky,pady=4)
 
         self.registLisetener(root, mainRoot)
@@ -119,7 +132,7 @@ class AddOneExecle(MainQuit):
     def clearOneTwo(self, createNameOneEt, createNameTwoEt,showContext):
         createNameTwoEt.delete(0,"end")
         createNameOneEt.delete(0,"end")
-        self.setTvContext(showContext,"")
+        self.setTvContext(showContext,"",TypeBgColor.info)
         pass
     #selectExcelTV 现有的excel
     #createExcelFileTV 创建的excle目录
@@ -153,7 +166,7 @@ class AddOneExecle(MainQuit):
             #创建新表添加数据
                 savePath=createPath+"/"+createSheetName+".xlsx"
                 if os.path.exists(savePath):
-                    self.setTvContext(showContext,f"温馨提示\n  {savePath},文件已经存在")
+                    self.setTvContext(showContext,f"温馨提示\n  {savePath},文件已经存在",TypeBgColor.waring)
                     #messagebox.showwarning("温馨提示",f"{savePath},文件已经存在")
                     return
 
@@ -164,12 +177,12 @@ class AddOneExecle(MainQuit):
                 pass
             oneData = createNameOneEt.get()
             if oneData is None or oneData =="":
-                self.setTvContext(showContext, f"温馨提示\n  列One 数据为空")
+                self.setTvContext(showContext, f"温馨提示\n  列One 数据为空",TypeBgColor.waring)
                 #messagebox.showwarning("温馨提示","列One 数据为空")
                 return
             twoData = createNameTwoEt.get()
             if twoData is None or twoData=="":
-                self.setTvContext(showContext, f"温馨提示\n  列Two 数据为空")
+                self.setTvContext(showContext, f"温馨提示\n  列Two 数据为空",TypeBgColor.waring)
                 #messagebox.showwarning("温馨提示", "列Two 数据为空")
                 return
            #=========判断是否重复============
@@ -222,13 +235,13 @@ class AddOneExecle(MainQuit):
                 print(f"mall=={mAlllist}")
                 if mAlllist.__len__() == 0:
                     self.setTvContext(showContext,
-                                      f"温馨提示\n========Success========\n数据数据one={oneData}\n 数据two={twoData}可以添加")
+                                      f"温馨提示\n========Success========\n数据数据one={oneData}\n 数据two={twoData}可以添加",TypeBgColor.Success)
                     return
                 if oneData != "" and oneData in mAlllist:
-                    self.setTvContext(showContext, f"温馨提示\n========Error========\n数据列One={oneData}数据重复")
+                    self.setTvContext(showContext, f"温馨提示\n========Error========\n数据列One={oneData}数据重复",TypeBgColor.error)
                     return
                 if twoData != "" and twoData in mAlllist:
-                    self.setTvContext(showContext, f"温馨提示\n========Error========\n数据列two{twoData}数据重复")
+                    self.setTvContext(showContext, f"温馨提示\n========Error========\n数据列two{twoData}数据重复",TypeBgColor.error)
                     return
                 # self.setTvContext(showContext, f"温馨提示\n========Success========\n数据{oneData}{twoData}可以添加")
                         #=============保存=============
@@ -237,16 +250,31 @@ class AddOneExecle(MainQuit):
 
             wb.save(savePath)
             wb.close()
-            self.setTvContext(showContext, f"温馨提示\n =======Success========\n 要保存的文件{savePath}成功")
+            self.setTvContext(showContext, f"温馨提示\n =======Success========\n 要保存的文件{savePath}成功",TypeBgColor.Success)
             #messagebox.showinfo("温馨提示", f"要保存的文件{savePath}成功")
         except:
-            self.setTvContext(showContext, f"温馨提示\n 要保存的文件{savePath}正在打开，或者异常，请关闭重试")
+            self.setTvContext(showContext, f"温馨提示\n 要保存的文件{savePath}正在打开，或者异常，请关闭重试",TypeBgColor.error)
             #messagebox.showerror("温馨提示", f"要保存的文件{savePath}正在打开，或者异常，请关闭重试")
 
 
             pass
-    def setTvContext(self,shwoContxt:Label,strContxt:str):
-        shwoContxt.config(text=strContxt)
+    def setTvContext(self,showContxt:Label,strContxt:str,color:TypeBgColor):
+        showContxt.config(text=strContxt)
+        bg="light blue"
+        if color==TypeBgColor.waring:
+            bg = "light Orange"
+        elif color==TypeBgColor.info:
+            bg="light blue"
+        elif color==TypeBgColor.error:
+            bg="light red"
+        elif color==TypeBgColor.Success:
+            bg="light green"
+        elif color==TypeBgColor.defend:
+            bg=""
+        print(f"{bg}")
+        if bg=="" or bg is None:
+            return
+        showContxt.config(bg=f"{bg}")
         pass
 
     def queryList(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext):
@@ -262,13 +290,13 @@ class AddOneExecle(MainQuit):
             print(f"{mOnesheetnames}//{sh}//{sh.max_row}")
             pass
         else:
-            self.setTvContext(showContext, "温馨提示\n   请选择要查询的Excele")
+            self.setTvContext(showContext, "温馨提示\n   请选择要查询的Excele",TypeBgColor.waring)
             return
         oneData = createNameOneEt.get()
         twoData = createNameTwoEt.get()
 
         if oneData=="" and twoData=="":
-            self.setTvContext(showContext,"温馨提示\n   列表One 或者列表two 不能都为空")
+            self.setTvContext(showContext,"温馨提示\n   列表One 或者列表two 不能都为空",TypeBgColor.waring)
             return
         # =========判断是否重复============
         sh_rows = sh.rows
@@ -291,13 +319,28 @@ class AddOneExecle(MainQuit):
                         mAlllist.append(itemA)
         print(f"mall=={mAlllist}")
         if mAlllist.__len__()==0:
-            self.setTvContext(showContext,f"温馨提示\n========Success========\n数据数据one={oneData}\n 数据two={twoData}可以添加")
+            self.setTvContext(showContext,f"温馨提示\n========Success========\n数据数据one={oneData}\n 数据two={twoData}可以添加",TypeBgColor.Success)
             return
         if oneData!="" and oneData in mAlllist:
-            self.setTvContext(showContext,f"温馨提示\n========Error========\n数据列One={oneData}数据重复")
+            self.setTvContext(showContext,f"温馨提示\n========Error========\n数据列One={oneData}数据重复",TypeBgColor.error)
             return
         if twoData != "" and twoData in mAlllist:
-            self.setTvContext(showContext, f"温馨提示\n========Error========\n数据列two{twoData}数据重复")
+            self.setTvContext(showContext, f"温馨提示\n========Error========\n数据列two{twoData}数据重复",TypeBgColor.error)
             return
-        self.setTvContext(showContext, f"温馨提示\n========Success========\n{oneData}\n{twoData}可以添加")
+        self.setTvContext(showContext, f"温馨提示\n========Success========\n{oneData}\n{twoData}可以添加",TypeBgColor.Success)
+        pass
+
+    def postadd(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext):
+        win32clipboard.OpenClipboard()
+        context=win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
+        win32clipboard.CloseClipboard()
+        print(f"{context}")
+        createNameOneEt.insert(0,context)
+        pass
+    def postaddTwo(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext):
+        win32clipboard.OpenClipboard()
+        context=win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
+        win32clipboard.CloseClipboard()
+        print(f"{context}")
+        createNameTwoEt.insert(0,context)
         pass
