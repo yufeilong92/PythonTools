@@ -118,7 +118,7 @@ class AddOneExecle(MainQuit):
         Label(master=root,text="提示：默认优选添加到现有excele,默认表一,,其次是新建excele",font=mFont).grid(row=rowNum,column=0,columnspan=3,sticky=mSticky,pady=4)
 
         rowNum += 1
-        showContext=Label(master=root,height=10,font=mFont,wraplength=600,bg="light blue")
+        showContext=Label(master=root,height=10,font=mFont,wraplength=600,bg="#2894FF")
         showContext.grid(row=rowNum,column=0,columnspan=3,sticky=mSticky,pady=4)
 
         self.registLisetener(root, mainRoot)
@@ -260,15 +260,15 @@ class AddOneExecle(MainQuit):
             pass
     def setTvContext(self,showContxt:Label,strContxt:str,color:TypeBgColor):
         showContxt.config(text=strContxt)
-        bg="light blue"
+        bg="#2894FF"
         if color==TypeBgColor.waring:
-            bg = "light Orange"
+            bg = "#C4C400"
         elif color==TypeBgColor.info:
-            bg="light blue"
+            bg="#2894FF"
         elif color==TypeBgColor.error:
-            bg="light red"
+            bg="#EA0000"
         elif color==TypeBgColor.Success:
-            bg="light green"
+            bg="#00BB00"
         elif color==TypeBgColor.defend:
             bg=""
         print(f"{bg}")
