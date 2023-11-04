@@ -349,6 +349,7 @@ class AddOneExecle(MainQuit):
         if cget is not None or cget!="":
             createNameOneEt.delete(0,"end")
         createNameOneEt.insert(0,context)
+        self.setTvContext(showContext, "", TypeBgColor.info)
         pass
     def postaddTwo(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext):
         win32clipboard.OpenClipboard()
@@ -359,4 +360,5 @@ class AddOneExecle(MainQuit):
         if cget is not None or cget != "":
             createNameTwoEt.delete(0,"end")
         createNameTwoEt.insert(0,context)
+        self.setTvContext(showContext, "", TypeBgColor.info)
         pass
