@@ -7,5 +7,6 @@ class TypeBgColor(Enum):
     error=3
     Success=4
     defend=5
+    AddSuccess=6
 
     pass

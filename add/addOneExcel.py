@@ -118,7 +118,7 @@ class AddOneExecle(MainQuit):
         Label(master=root,text="提示：默认优选添加到现有excele,默认表一,,其次是新建excele",font=mFont).grid(row=rowNum,column=0,columnspan=3,sticky=mSticky,pady=4)
 
         rowNum += 1
-        showContext=Label(master=root,height=10,font=mFont,wraplength=600,bg="#2894FF")
+        showContext=Label(master=root,height=10,font=mFont,wraplength=600,bg="#5EA4DE")
         showContext.grid(row=rowNum,column=0,columnspan=3,sticky=mSticky,pady=4)
 
         self.registLisetener(root, mainRoot)
@@ -258,7 +258,7 @@ class AddOneExecle(MainQuit):
 
             wb.save(savePath)
             wb.close()
-            self.setTvContext(showContext, f"温馨提示\n =======Success========\n 要保存的文件{savePath}成功",TypeBgColor.Success)
+            self.setTvContext(showContext, f"温馨提示\n =======Success========\n 要保存的文件{savePath}成功",TypeBgColor.AddSuccess)
             #messagebox.showinfo("温馨提示", f"要保存的文件{savePath}成功")
         except:
             self.setTvContext(showContext, f"温馨提示\n 要保存的文件{savePath}正在打开，或者异常，请关闭重试",TypeBgColor.error)
@@ -268,7 +268,7 @@ class AddOneExecle(MainQuit):
             pass
     def setTvContext(self,showContxt:Label,strContxt:str,color:TypeBgColor):
         showContxt.config(text=strContxt)
-        bg="#2894FF"
+        bg="#5EA4DE"
         if color==TypeBgColor.waring:
             bg = "#C4C400"
         elif color==TypeBgColor.info:
@@ -277,6 +277,8 @@ class AddOneExecle(MainQuit):
             bg="#EA0000"
         elif color==TypeBgColor.Success:
             bg="#00BB00"
+        elif color == TypeBgColor.AddSuccess:
+            bg = "#CA8EFF"
         elif color==TypeBgColor.defend:
             bg=""
         print(f"{bg}")
