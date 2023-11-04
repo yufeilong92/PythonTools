@@ -335,6 +335,9 @@ class AddOneExecle(MainQuit):
         context=win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
         win32clipboard.CloseClipboard()
         print(f"{context}")
+        cget = createNameOneEt.get()
+        if cget is not None or cget!="":
+            createNameOneEt.delete(0,"end")
         createNameOneEt.insert(0,context)
         pass
     def postaddTwo(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext):
@@ -342,5 +345,8 @@ class AddOneExecle(MainQuit):
         context=win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
         win32clipboard.CloseClipboard()
         print(f"{context}")
+        cget = createNameTwoEt.get()
+        if cget is not None or cget != "":
+            createNameTwoEt.delete(0,"end")
         createNameTwoEt.insert(0,context)
         pass
