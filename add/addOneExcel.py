@@ -150,6 +150,12 @@ class AddOneExecle(MainQuit):
             wb:Workbook=None
             sh:Worksheet=None
             isrep=False;
+
+
+            if selecetExcele == "excel的地址":
+                if createPath == "" or createSheetName == "":
+                    self.setTvContext(showContext, "温馨提示\n   请选择要保存的Excele", TypeBgColor.waring)
+                    return
             if selecetExcele!="excel的地址":
                 savePath=selecetExcele
                 wb=load_workbook(selecetExcele)
@@ -162,6 +168,8 @@ class AddOneExecle(MainQuit):
 
                 isrep=True
                 pass
+
+
             else:
             #创建新表添加数据
                 savePath=createPath+"/"+createSheetName+".xlsx"
