@@ -357,7 +357,6 @@ class AddOneExecle(MainQuit):
 
         createNameOneEt.insert(0, context)
         self.setTvContext(showContext, "", TypeBgColor.info)
-        sleep(1)
         self.queryList(selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext)
         pass
     def postaddTwo(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext):
@@ -371,6 +370,5 @@ class AddOneExecle(MainQuit):
 
         createNameTwoEt.insert(0,context)
         self.setTvContext(showContext, "", TypeBgColor.info)
-        sleep(1)
         self.queryList(selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext)
         pass
