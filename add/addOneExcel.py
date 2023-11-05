@@ -370,5 +370,9 @@ class AddOneExecle(MainQuit):
 
         createNameTwoEt.insert(0,context)
         self.setTvContext(showContext, "", TypeBgColor.info)
-        self.queryList(selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext)
+        if createNameOneEt.get()=="":
+            self.queryList(selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext)
+        else:
+            self.addSaveExcle(selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext)
+
         pass
