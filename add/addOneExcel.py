@@ -341,24 +341,31 @@ class AddOneExecle(MainQuit):
         pass
 
     def postadd(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext):
+        dataone = createNameOneEt.get()
+        if dataone is not None or dataone != "":
+            createNameOneEt.delete(0, END)
+
+        datatwo = createNameTwoEt.get()
+        if datatwo is not None or datatwo != "":
+            createNameTwoEt.delete(0, END)
+
         win32clipboard.OpenClipboard()
         context=win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
         win32clipboard.CloseClipboard()
-        print(f"{context}")
-        cget = createNameOneEt.get()
-        if cget is not None or cget!="":
-            createNameOneEt.delete(0,"end")
-        createNameOneEt.insert(0,context)
+        print(f"拷贝数one=={context}")
+
+        createNameOneEt.insert(0, context)
         self.setTvContext(showContext, "", TypeBgColor.info)
         pass
     def postaddTwo(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext):
+        cget = createNameTwoEt.get()
+        if cget is not None or cget != "":
+            createNameTwoEt.delete(0, END)
         win32clipboard.OpenClipboard()
         context=win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
         win32clipboard.CloseClipboard()
-        print(f"{context}")
-        cget = createNameTwoEt.get()
-        if cget is not None or cget != "":
-            createNameTwoEt.delete(0,"end")
+        print(f"拷贝数two=={context}")
+
         createNameTwoEt.insert(0,context)
         self.setTvContext(showContext, "", TypeBgColor.info)
         pass
