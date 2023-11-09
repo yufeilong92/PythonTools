@@ -12,6 +12,7 @@ from ExportFile.MergeXlsx import MergeXlsx
 from ExportFile.QueryRep import QueryRep
 from Base.MainQuit import MainQuit
 from Base.STARTGUI import STARTGUI
+from add.Translate import Translate
 from add.addOneExcel import AddOneExecle
 from colorSelect.ColorSelect import ColorSelect
 from colorSelect.PictureReadTxt import PictureReadTxt
@@ -41,6 +42,9 @@ class Guide(MainQuit):
         elif type==STARTGUI.ADDONEEXCEL:
             addoneExcel=AddOneExecle()
             addoneExcel.showDialog(root)
+        elif type == STARTGUI.TRANSLATE:
+            translate = Translate()
+            translate.showDialog(root)
 
 
     def guideTool(self):
@@ -75,6 +79,9 @@ class Guide(MainQuit):
         Button(master=root, text="添加数据到excel", font=mFont,
                command=lambda: self.startGUI(root, STARTGUI.ADDONEEXCEL)).grid(
             row=1, column=1, sticky=E + W)
+        Button(master=root, text="翻译", font=mFont,
+               command=lambda: self.startGUI(root, STARTGUI.TRANSLATE)).grid(
+            row=1, column=2, sticky=E + W)
         # =============第二行开始=================
         # Button(master=root, text="颜色选择器",bg=mbg,font=mFont,command=lambda :adbColorSelect()).grid(row=1,column=0,sticky=E+W)
         # ==============================

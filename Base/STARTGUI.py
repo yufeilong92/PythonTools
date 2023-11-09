@@ -14,3 +14,4 @@ class STARTGUI(Enum):
     MERGE = 5
     PICTURETEXT=6
     ADDONEEXCEL=7
+    TRANSLATE=8
