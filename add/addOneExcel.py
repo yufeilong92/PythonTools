@@ -242,10 +242,10 @@ class AddOneExecle(MainQuit):
                             if itemA is not None:
                                 mAlllist.append(itemA)
                 print(f"mall=={mAlllist}")
-                if mAlllist.__len__() == 0:
-                    self.setTvContext(showContext,
-                                      f"温馨提示\n========Success========\n数据数据one={oneData}\n 数据two={twoData}可以添加",TypeBgColor.Success)
-                    return
+                # if mAlllist.__len__() == 0:
+                #     self.setTvContext(showContext,
+                #                       f"温馨提示\n========Success========\n数据数据one={oneData}\n 数据two={twoData}可以添加",TypeBgColor.Success)
+                #     return
                 if oneData != "" and oneData in mAlllist:
                     self.setTvContext(showContext, f"温馨提示\n========Error========\n数据列One={oneData}数据重复",TypeBgColor.error)
                     return
