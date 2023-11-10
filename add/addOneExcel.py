@@ -267,26 +267,7 @@ class AddOneExecle(MainQuit):
 
 
             pass
-    def setTvContext(self,showContxt:Label,strContxt:str,color:TypeBgColor):
-        showContxt.config(text=strContxt)
-        bg="#5EA4DE"
-        if color==TypeBgColor.waring:
-            bg = "#C4C400"
-        elif color==TypeBgColor.info:
-            bg="#2894FF"
-        elif color==TypeBgColor.error:
-            bg="#EA0000"
-        elif color==TypeBgColor.Success:
-            bg="#00BB00"
-        elif color == TypeBgColor.AddSuccess:
-            bg = "#CA8EFF"
-        elif color==TypeBgColor.defend:
-            bg=""
-        print(f"{bg}")
-        if bg=="" or bg is None:
-            return
-        showContxt.config(bg=f"{bg}")
-        pass
+
 
     def queryList(self, selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext):
         selecetExcele = selectExcelTV.cget("text")
@@ -374,5 +355,4 @@ class AddOneExecle(MainQuit):
             self.queryList(selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext)
         else:
             self.addSaveExcle(selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext)
-
         pass

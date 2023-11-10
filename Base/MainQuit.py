@@ -12,6 +12,10 @@ from  tkinter import  filedialog
 from Base.FileDialogType import FileDialogType
 
 from tkinter import  messagebox
+
+from Base.TypeBgColor import TypeBgColor
+
+
 class MainQuit:
     def registLisetener(self,root:Tk,mainRoot:Tk):
         root.protocol('WM_DELETE_WINDOW', lambda: self.QueryWindow(root, mainRoot))
@@ -58,4 +62,23 @@ class MainQuit:
             if isinstance(item,StringVar):
                 item.set("")
                 # print("adbComboChange执行了=====")
+        pass
+    def setTvContext(self,showContxt:Label,strContxt:str,color:TypeBgColor):
+        showContxt.config(text=strContxt)
+        bg="#5EA4DE"
+        if color==TypeBgColor.waring:
+            bg = "#C4C400"
+        elif color==TypeBgColor.info:
+            bg="#2894FF"
+        elif color==TypeBgColor.error:
+            bg="#EA0000"
+        elif color==TypeBgColor.Success:
+            bg="#00BB00"
+        elif color == TypeBgColor.AddSuccess:
+            bg = "#CA8EFF"
+        elif color==TypeBgColor.defend:
+            bg=""
+        if bg=="" or bg is None:
+            return
+        showContxt.config(bg=f"{bg}")
         pass
