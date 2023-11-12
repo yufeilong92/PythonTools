@@ -12,7 +12,7 @@ from ExportFile.MergeXlsx import MergeXlsx
 from ExportFile.QueryRep import QueryRep
 from Base.MainQuit import MainQuit
 from Base.STARTGUI import STARTGUI
-from add.Translate import Translate
+from FanTranslate.TranslateTools import TranslateTools
 from add.addOneExcel import AddOneExecle
 from colorSelect.ColorSelect import ColorSelect
 from colorSelect.PictureReadTxt import PictureReadTxt
@@ -43,7 +43,7 @@ class Guide(MainQuit):
             addoneExcel=AddOneExecle()
             addoneExcel.showDialog(root)
         elif type == STARTGUI.TRANSLATE:
-            translate = Translate()
+            translate = TranslateTools()
             translate.showDialog(root)
 
 
