@@ -24,9 +24,9 @@ class BaiduPostTools:
         gtk = re.findall(r'gtk = "(.*?)"', response_index.text)[0]
         print(f"window.gtk={gtk},window.token={token}")
         #自动检测语音
-        # response_lang=session.post(url=lang_url,headers=headers,data={'query':query})
-        # lang=response_lang.json()['lan']
-        return token,gtk,"lang"
+        response_lang=session.post(url=lang_url,headers=headers,data={'query':query})
+        lang=response_lang.json()['lan']
+        return token,gtk,lang
     def get_sign(self,query,gtk):
         with open("FanTranslate/baiduSign.js",'r',encoding='utf-8')as f:
             baidu_js=f.read()
@@ -34,10 +34,14 @@ class BaiduPostTools:
 
         return sign
     def getAcsToken(self,query,lang):
-        with open("FanTranslate/baidufanyi_encrypt.js", 'r', encoding='utf-8') as f:
-            baidu_js = f.read()
+        # with open("FanTranslate/baidufanyi_encrypt.js", 'r', encoding='utf-8') as f:
+        #     baidu_js = f.read()
         url = f"https://fanyi.baidu.com/#{lang}/zh/{query}"
-        acs_token = execjs.compile(baidu_js).call("ascToken", url)
+        print(f"============{url}")
+        with open("FanTranslate/baiduSign.js", 'r', encoding='utf-8') as f:
+            baidu_js = f.read()
+        acs_token = execjs.compile(baidu_js).call("ascToken",url)
+        # acs_token = execjs.compile(baidu_js).call("ascToken", url)
         print(f"============{acs_token}")
         return acs_token
 

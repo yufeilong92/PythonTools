@@ -1,5 +1,7 @@
+var global={}
+var window =global;
 
-var window =  global;
+
 (function() {
     var a = function(c, d) {
         var e = '\x31\x2e\x32\x2e\x30';
@@ -775,4 +777,4 @@ function ascToken(translate_url){
 
 
 // console.log(e('测试'))
-console.log(ascToken("https://fanyi.baidu.com/#zh/en/%E6%B5%8B%E8%AF%95"));
+// console.log(ascToken("https://fanyi.baidu.com/#zh/en/%E6%B5%8B%E8%AF%95"));
