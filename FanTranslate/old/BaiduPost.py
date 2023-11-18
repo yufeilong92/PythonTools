@@ -26,7 +26,7 @@ def get_params(query):
     lang=response_lang.json()['lan']
     return token,gtk,lang
 def get_sign(query,gtk):
-    with open("baiduSign.js",'r',encoding='utf-8')as f:
+    with open("baiduSign.js", 'r', encoding='utf-8')as f:
         baidu_js=f.read()
     sign=execjs.compile(baidu_js).call('b',query,gtk)
     return sign

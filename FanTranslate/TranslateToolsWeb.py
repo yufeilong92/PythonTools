@@ -2,27 +2,20 @@ import hashlib
 import json
 import os
 import random
-import string
 import time
-from tkinter import Tk
 from tkinter import  *
 
 from Base.MainQuit import MainQuit
 from tkinter import filedialog
 import requests
-import langid
 from tkinter import ttk
 import tkinter as tk
 
 from Base.TypeBgColor import TypeBgColor
-
-from translate import  Translator
-
-from FanTranslate.BaiduPostTools import BaiduPostTools
-from FanTranslate.TranslateMain import TranslateMain
+from FanTranslate.StartBaiduWebTest import StartBaiduWebTest
 
 
-class TranslateTools(MainQuit):
+class TranslateToolsWeb(MainQuit):
     def showDialog(self, mainRoot):
         root = Tk()
         root.title("保存数据到exle")
@@ -65,49 +58,6 @@ class TranslateTools(MainQuit):
         self.registLisetener(root, mainRoot)
         mainloop()
         pass
-
-    def send_request(self,content,from_lang,to_lang,showContext:Label):
-        salt = str(round(time.time() * 1000)) + str(random.randint(0, 9))
-        data = "fanyideskweb" + content + salt + "Tbh5E8=q6U3EXe+&L[4c@"
-        sign = hashlib.md5()
-        sign.update(data.encode("utf-8"))
-        sign = sign.hexdigest()
-
-        url = 'http://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule'
-        headers = {
-            'Cookie': 'OUTFOX_SEARCH_USER_ID=-1927650476@223.97.13.65;',
-            'Host': 'fanyi.youdao.com',
-            'Origin': 'http://fanyi.youdao.com',
-            'Referer': 'http://fanyi.youdao.com/',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.146 Safari/537.36',
-        }
-        data = {
-            'i': str(content),
-            'from': f'{from_lang}',
-            # 'from': 'ja',
-            'to': f'{to_lang}',
-            # 'to': 'zh-CHS',
-            'smartresult': 'dict',
-            'client': 'fanyideskweb',
-            'salt': str(salt),
-            'sign': str(sign),
-            'version': '2.1',
-            'keyfrom': 'fanyi.web',
-            'action': 'FY_BY_REALTlME',
-        }
-        try:
-            res = requests.post(url=url, headers=headers, data=data)
-            print(f"======={res.status_code}")
-            print(f"====={res.json()}")
-            htm=res.json()
-            return htm['translateResult'][0][0]['tgt']
-        except Exception as e:
-            time.sleep(1)
-            print(f"网络连接中{e}")
-            self.setTvContext(showContext, "===========Error==========\n   网络重新连接", TypeBgColor.waring)
-            self.send_request(content, from_lang, to_lang, showContext)
-            pass
-
     def translateApp(self, combobox:COMMAND,selectExcelTV:Label,showContext:Label):
         selectPath = selectExcelTV.cget("text")
         if selectPath=="" or selectPath is None:
@@ -139,13 +89,17 @@ class TranslateTools(MainQuit):
         else:
             fromlang = 'ja'
             tolang = 'zh-CHS'
+        startWebBaidu=StartBaiduWebTest()
+        driver = startWebBaidu.startFireFox()
+        time.sleep(4)
         for item in listdir:
-            self.startTransta(selectPath,item,fromlang,tolang,showContext)
-            time.sleep(6)
+            self.startTransta(selectPath,item,fromlang,tolang,showContext,startWebBaidu,driver)
+            time.sleep(1)
         pass
-    def startTransta(self,selectPath:str,item:str,fromlang,tolang,showContext):
+    def startTransta(self,selectPath:str,item:str,fromlang,tolang,showContext,startWebBaidu,driver):
         split = item.split(".mp4")
-        oldPath=selectPath+"/"+item
+        oldPath = selectPath + "/" + item
+
         content = split[0].strip()
         str1=' /.●~)(。…】【AQWERTYUIOPLKJHGFDSAZXCVBNM,.:`_=-+/;qwertyuiopasdfghjklzxcvbnm'
         table = str.maketrans('', '', str1)
@@ -158,31 +112,35 @@ class TranslateTools(MainQuit):
         # content.replace("(","")
         # content.replace("。","")
 
-        print(f"翻译前的数据=={translate}")
+        print(f"翻译前的数据=={translate}\n")
         # tanslateall=Translator("zh","autodetect")
         # result=tanslateall.translate(translate)
         # print(result)
         # return
-
-        baidu =BaiduPostTools()
-        result = baidu.getTranslateRsult(translate)
-        if result is None :
-            time.sleep(10)
-            result = baidu.getTranslateRsult(translate)
+        result = startWebBaidu.getTranslateData(translate, driver)
+        if result is None:
+            time.sleep(1)
+            driver.refresh()
+            result = startWebBaidu.getTranslateData(translate, driver)
         if result is None:
             return
-        print(f"翻译的结果=={result.strip()}")
-
+        print(f"翻译的结果=={result}\n")
         newPath=selectPath+"/"+result.strip()+".mp4"
-        print(f"old={oldPath} \n========================\nnewpath={newPath}")
+        # print(f"old={oldPath} \n=====\nnewpath={newPath}")
         try:
-            if os.path.exists(oldPath) and not os.path.exists(newPath):
-                print(f"不存在======================={newPath}")
-                os.rename(oldPath, newPath)
 
+            if not os.path.exists(newPath) and os.path.exists(oldPath) :
+                print(f"====不存在{newPath}===\n")
+                os.rename(oldPath, newPath)
+            else:
+                print(f"<<<{newPath}存在>>>\n")
+                # self.setTvContext(showContext, f"===========wring==========\n   {newPath}文件已经存在", TypeBgColor.waring)
+                return
         except Exception as e:
-            print(f"抛出异常=={e}")
-        self.setTvContext(showContext, f"===========Success==========\n  {oldPath}\n替换成{newPath}",
+            print(f"抛出异常=={e}\n")
+        self.setTvContext(showContext, f"===========Success==========\n  {oldPath}\n替换成{newPath}\n"
+                                       f""
+                                       f"",
                           TypeBgColor.Success)
         pass
     def adbSelectFileOne(self, selectExcelTV):
@@ -192,36 +150,6 @@ class TranslateTools(MainQuit):
         selectExcelTV.config(text=f"{pathNum}")
         pass
 
-    def tran(self,api_id, key, word, from_lang, to_lang):
-        # init salt and final_sign
-        salt = str(time.time())[:10]
-        final_sign = api_id + word + salt + key
-        final_sign = hashlib.md5(final_sign.encode("utf-8")).hexdigest()
-        # 表单paramas
-        paramas = {
-            'q': word,
-            'from': from_lang,
-            'to': to_lang,
-            'appid': '%s' % api_id,
-            'salt': '%s' % salt,
-            'sign': '%s' % final_sign
-        }
-        response = requests.get('http://api.fanyi.baidu.com/api/trans/vip/translate', params=paramas,
-                                timeout=10).content
-        content = str(response, encoding="utf-8")
-        json_reads = json.loads(content)
-        try:
-            return json_reads['trans_result'][0]['dst']
-        # 百度翻译偶尔会拉闸
-        except:
-            print('    >正在尝试重新翻译...')
-            return self.tran(api_id, key, word, from_lang, to_lang)
 
 
-    def baiduTranslate(self,contenxt):
-        api_id = '20180301000129461'
-        key = 'Q8UqOZY4lFIr5z8LtROi'
-        # word = '需要翻译的内容'
-        from_lang = 'jp'  # 从：日文
-        to_lang = 'zh'  # 翻译为：简体中文
-        return self.tran(api_id, key, contenxt, from_lang, to_lang)
+
