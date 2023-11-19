@@ -77,7 +77,7 @@ class MainQuit:
         elif color == TypeBgColor.AddSuccess:
             bg = "#CA8EFF"
         elif color==TypeBgColor.defend:
-            bg=""
+            bg="#5EA4DE"
         if bg=="" or bg is None:
             return
         showContxt.config(bg=f"{bg}")

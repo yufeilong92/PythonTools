@@ -34,18 +34,27 @@ class StartBaiduWebTest():
         driver.get(url1)
         driver.refresh()
         return driver
-    def getTranslateData(self,input,driver,):
-        if driver is None:
-            driver=self.startFireFox()
-        inputText = driver.find_element(by=By.ID, value='baidu_translate_input')
-        inputText.send_keys(input)
-        self.sleepTime(3)
-        data =self.copyBtn(driver)
-        if data == "" or data is None:
+    def getTranslateData(self,input,driver):
+        try:
+            if driver is None:
+                driver=self.startFireFox()
+            inputText = driver.find_element(by=By.ID, value='baidu_translate_input')
+            inputText.send_keys(input)
+            self.sleepTime(3)
+
             data =self.copyBtn(driver)
-        # self.sleepTime(timeNumber)
-        self.clearBtn(driver)
-        return data
+            if data == "" or data is None:
+                data =self.copyBtn(driver)
+            # self.sleepTime(timeNumber)
+            self.clearBtn(driver)
+            return data
+        except Exception as e:
+            driver.refresh()
+            self.sleepTime(4)
+            print(f"findelemali {e}")
+            self.getTranslateData(input,driver)
+        # inputText.clear()
+
 
 
     # if __name__=="__main__":
