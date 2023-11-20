@@ -94,6 +94,7 @@ class TranslateToolsWeb(MainQuit):
         savelog = comboboxSavelog.get()
         isSaveLog = False
         f = None
+        pathlog=""
         print(f"savelog==={savelog}")
         if savelog == "是":
             path = logPathTv.cget("text")
@@ -105,8 +106,7 @@ class TranslateToolsWeb(MainQuit):
                 self.setTvContext(showContext, "请输入log的名称", TypeBgColor.waring)
                 return
             isSaveLog = True
-            printPath = f"{path}/{name}.txt"
-            f = open(printPath, "a")
+            pathlog=f"{path}/{name}.txt"
         else:
             isSaveLog = False
             f = None
@@ -145,11 +145,11 @@ class TranslateToolsWeb(MainQuit):
         driver = startWebBaidu.startFireFox()
         time.sleep(4)
         for item in listdir:
-            self.startTransta(selectPath, item, fromlang, tolang, showContext, startWebBaidu, driver, isSaveLog, f)
+            self.startTransta(selectPath, item, fromlang, tolang, showContext, startWebBaidu, driver, isSaveLog, pathlog)
             time.sleep(1)
         pass
 
-    def startTransta(self, selectPath, item, fromlang, tolang, showContext, startWebBaidu, driver, isSaveLog, f):
+    def startTransta(self, selectPath, item, fromlang, tolang, showContext, startWebBaidu, driver, isSaveLog, pathlog):
         split = item.split(".mp4")
         oldPath = selectPath + "/" + item
 
@@ -166,8 +166,10 @@ class TranslateToolsWeb(MainQuit):
         # content.replace(")","")
         # content.replace("(","")
         # content.replace("。","")
-        if isSaveLog and f is not None:
+        if isSaveLog and pathlog !="" :
+            f=open(pathlog,"a")
             print(f"翻译前的数据=={translate}\n", file=f)
+            f.close()
         print(f"翻译前的数据=={translate}\n")
         # tanslateall=Translator("zh","autodetect")
         # result=tanslateall.translate(translate)
@@ -184,34 +186,37 @@ class TranslateToolsWeb(MainQuit):
         if result is None:
             return
 
-        if isSaveLog and f is not None:
+        if isSaveLog and pathlog !="":
+            f=open(pathlog,"a")
             print(f"翻译的结果=={result}\n", file=f)
+            f.close()
         print(f"翻译的结果=={result}\n")
         newPath = selectPath + "/" + result.strip() + ".mp4"
         # print(f"old={oldPath} \n=====\nnewpath={newPath}")
         try:
 
             if not os.path.exists(newPath) and os.path.exists(oldPath):
-                if isSaveLog and f is not None:
+                if isSaveLog and pathlog !="":
+                    f = open(pathlog, "a")
                     print(f"====不存在{newPath}===\n", file=f)
+                    f.close()
                 print(f"====不存在{newPath}===\n")
                 os.rename(oldPath, newPath)
             else:
-                if isSaveLog and f is not None:
+                if isSaveLog and pathlog !="":
+                    f = open(pathlog, "a")
                     print(f"<<<{newPath}存在>>>\n", file=f)
+                    f.close()
                 print(f"<<<{newPath}存在>>>\n")
                 # self.setTvContext(showContext, f"===========wring==========\n   {newPath}文件已经存在", TypeBgColor.waring)
                 return
         except Exception as e:
-            if isSaveLog and f is not None:
+            if isSaveLog and pathlog !="":
+                f = open(pathlog, "a")
                 print(f"抛出异常=={e}\n", file=f)
+                f.close()
             print(f"抛出异常=={e}\n")
-        if isSaveLog and f is not None:
-            f.close()
-        self.setTvContext(showContext, f"===========Success==========\n  {oldPath}\n替换成{newPath}\n"
-                                       f""
-                                       f"",
-                          TypeBgColor.Success)
+        self.setTvContext(showContext, f"===========Success==========\n  {oldPath}\n替换成{newPath}\n",TypeBgColor.Success)
         pass
 
     def adbSelectFileOne(self, selectExcelTV, showcontxt):
