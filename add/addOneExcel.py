@@ -194,6 +194,9 @@ class AddOneExecle(MainQuit):
                 self.setTvContext(showContext, f"温馨提示\n  列Two 数据为空",TypeBgColor.waring)
                 #messagebox.showwarning("温馨提示", "列Two 数据为空")
                 return
+            if oneData==twoData:
+                self.setTvContext(showContext, f"温馨提示\n  请检查数据one/two", TypeBgColor.waring)
+                return
            #=========判断是否重复============
             if isrep:
                 sh_rows = sh.rows
