@@ -82,3 +82,13 @@ class MainQuit:
             return
         showContxt.config(bg=f"{bg}")
         pass
+
+    def saveLog(self,patch,content):
+        if patch=="" or content =="":
+            return
+        try:
+            f = open(patch, "a", encoding="utf-8")
+            print(f"翻译前的数据=={content}\n", file=f)
+            f.close()
+        except Exception as e :
+            print(e)

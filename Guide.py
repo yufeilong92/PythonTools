@@ -18,7 +18,7 @@ from add.addOneExcel import AddOneExecle
 from colorSelect.ColorSelect import ColorSelect
 from colorSelect.PictureReadTxt import PictureReadTxt
 
-
+from add.Merge import Merge
 class Guide(MainQuit):
     def startGUI(self, root: Tk, type: STARTGUI):
         root.withdraw()
@@ -34,7 +34,7 @@ class Guide(MainQuit):
         elif type == STARTGUI.QUERYREP:
             queryRep = QueryRep()
             queryRep.showDialog(root)
-        elif type==STARTGUI.MERGE:
+        elif type==STARTGUI.MERGEXLS:
             merge=MergeXlsx()
             merge.showDialog(root)
         elif type==STARTGUI.PICTURETEXT:
@@ -46,6 +46,9 @@ class Guide(MainQuit):
         elif type == STARTGUI.TRANSLATE:
             translate = TranslateToolsWeb()
             translate.showDialog(root)
+        elif type == STARTGUI.MERGETS:
+            merge = Merge()
+            merge.showDialog(root)
 
 
     def guideTool(self):
@@ -68,7 +71,7 @@ class Guide(MainQuit):
             row=0, column=2, sticky=E + W)
         Button(master=root, text="查询重复", font=mFont, command=lambda: self.startGUI(root, STARTGUI.QUERYREP)).grid(
             row=0, column=3, sticky=E + W)
-        Button(master=root, text="合并Xlsx", font=mFont, command=lambda: self.startGUI(root, STARTGUI.MERGE)).grid(
+        Button(master=root, text="合并Xlsx", font=mFont, command=lambda: self.startGUI(root, STARTGUI.MERGEXLS)).grid(
             row=0, column=4, sticky=E + W)
 
         # 给标题设置权重
@@ -83,6 +86,9 @@ class Guide(MainQuit):
         Button(master=root, text="翻译", font=mFont,
                command=lambda: self.startGUI(root, STARTGUI.TRANSLATE)).grid(
             row=1, column=2, sticky=E + W)
+        Button(master=root, text="合成", font=mFont,
+               command=lambda: self.startGUI(root, STARTGUI.MERGETS)).grid(
+            row=1, column=3, sticky=E + W)
         # =============第二行开始=================
         # Button(master=root, text="颜色选择器",bg=mbg,font=mFont,command=lambda :adbColorSelect()).grid(row=1,column=0,sticky=E+W)
         # ==============================

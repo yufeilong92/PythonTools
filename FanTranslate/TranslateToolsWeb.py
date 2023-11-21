@@ -167,10 +167,8 @@ class TranslateToolsWeb(MainQuit):
         # content.replace("(","")
         # content.replace("。","")
         if isSaveLog and pathlog !="" :
-            f=open(pathlog,"a")
-            print(f"翻译前的数据=={translate}\n", file=f)
-            f.close()
-        print(f"翻译前的数据=={translate}\n")
+            self.saveLog(pathlog,f"翻译前的数据=={translate}")
+        print(f"翻译前的数据=={translate}\n",f"翻译前的数据=={translate}\n")
         # tanslateall=Translator("zh","autodetect")
         # result=tanslateall.translate(translate)
         # print(result)
@@ -187,9 +185,7 @@ class TranslateToolsWeb(MainQuit):
             return
 
         if isSaveLog and pathlog !="":
-            f=open(pathlog,"a")
-            print(f"翻译的结果=={result}\n", file=f)
-            f.close()
+            self.saveLog(pathlog, f"翻译的结果=={result}")
         print(f"翻译的结果=={result}\n")
         newPath = selectPath + "/" + result.strip() + ".mp4"
         # print(f"old={oldPath} \n=====\nnewpath={newPath}")
@@ -197,24 +193,18 @@ class TranslateToolsWeb(MainQuit):
 
             if not os.path.exists(newPath) and os.path.exists(oldPath):
                 if isSaveLog and pathlog !="":
-                    f = open(pathlog, "a")
-                    print(f"====不存在{newPath}===\n", file=f)
-                    f.close()
+                    self.saveLog(pathlog, f"====不存在{newPath}===")
                 print(f"====不存在{newPath}===\n")
                 os.rename(oldPath, newPath)
             else:
                 if isSaveLog and pathlog !="":
-                    f = open(pathlog, "a")
-                    print(f"<<<{newPath}存在>>>\n", file=f)
-                    f.close()
+                    self.saveLog(pathlog, f"<<<{newPath}存在>>>")
                 print(f"<<<{newPath}存在>>>\n")
                 # self.setTvContext(showContext, f"===========wring==========\n   {newPath}文件已经存在", TypeBgColor.waring)
                 return
         except Exception as e:
             if isSaveLog and pathlog !="":
-                f = open(pathlog, "a")
-                print(f"抛出异常=={e}\n", file=f)
-                f.close()
+                self.saveLog(pathlog, f"抛出异常=={e}")
             print(f"抛出异常=={e}\n")
         self.setTvContext(showContext, f"===========Success==========\n  {oldPath}\n替换成{newPath}\n",TypeBgColor.Success)
         pass
