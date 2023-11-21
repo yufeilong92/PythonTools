@@ -4,7 +4,7 @@ from datetime import datetime
 
 from Base.FileDialogType import FileDialogType
 from Base.MainQuit import MainQuit
-from tkinter import Tk
+from tkinter import Tk, filedialog
 
 from tkinter import *
 
@@ -12,6 +12,20 @@ from Base.TypeBgColor import TypeBgColor
 
 
 class Merge(MainQuit):
+    def selectFileDialogs(self,tv:Label,type:FileDialogType,showContext):
+        self.setTvContext(showContext,"",TypeBgColor.defend)
+        #选择目录
+        path=None
+        if type==FileDialogType.DIRECTORY:
+            dialog=filedialog.askdirectory()
+            if dialog is not None:
+                path=dialog
+        elif type==FileDialogType.DOCUMENT:#文件
+            fileType=[("Xlsx",".xlsx")]
+            dialog=filedialog.askopenfile(filetypes=fileType)
+            if dialog is not  None:
+                path=dialog.name
+        tv.config(text=path)
     def showDialog(self, mainRoot):
         root = Tk()
         root.title("合成ts文件")
@@ -30,7 +44,7 @@ class Merge(MainQuit):
         selectTsFileTv.grid(row=rowNum, column=1, sticky=mSticky, pady=4)
 
         Button(master=root, text="选择", font=mFont, relief=mRlief,
-               command=lambda: self.selectFileDialog(selectTsFileTv, FileDialogType.DIRECTORY, "", "", False)).grid(
+               command=lambda: self.selectFileDialogs(selectTsFileTv, FileDialogType.DIRECTORY, showContext)).grid(
             row=rowNum, column=2,
             sticky=mSticky,
             pady=4)
@@ -47,7 +61,7 @@ class Merge(MainQuit):
         savceFileTsTV.grid(row=rowNum, column=1, sticky=mSticky, pady=4)
 
         Button(master=root, text="选择", font=mFont, relief=mRlief,
-               command=lambda: self.selectFileDialog(savceFileTsTV, FileDialogType.DIRECTORY, "", "", False)).grid(
+               command=lambda: self.selectFileDialogs(savceFileTsTV, FileDialogType.DIRECTORY, showContext)).grid(
             row=rowNum, column=2,
             sticky=mSticky,
             pady=4)
@@ -89,48 +103,18 @@ class Merge(MainQuit):
         if name == "" or name is None:
             self.setTvContext(showContext, "========Waring========\n   请输入保持的名称", TypeBgColor.waring)
             return
-        self.test(selectTsFile, saveTsFile, name)
+        savetxt = f"{saveTsFile}/{name}.ts"
+        pathlist = selectTsFile + "/*.ts"
+        print(f"savetxt=={savetxt}")
+        print(f"pathlist=={selectTsFile}")
+        saveReplace = savetxt.replace("/", "\\")
+        selectReplace = pathlist.replace("/", "\\")
+        cmdd = f"copy /b {selectReplace}  {saveReplace}"
+        os.system(f"start cmd.exe /k   {cmdd}")
         self.setTvContext(showContext, "========Success========\n   执行成功", TypeBgColor.Success)
 
         pass
 
-    def test(self, path, save_path, name):
-        file_names = os.listdir(path)
-        # =============lad=========================
-        # files = [f for f in os.listdir(path) if f.endswith(".ts")]
-        # files = sorted(files)
-        # print(files)
-        # with open(f"{save_path}/{name}.ts", "wb") as outfile:
-        #     # 逐个读取TS文件并写入到新文件中
-        #     for filename in files:
-        #         with open(os.path.join(path, filename), "rb") as infile:
-        #             outfile.write(infile.read())
-        # ======================================
-        if 'file_list.txt' in file_names:
-            os.remove(path + 'file_list.txt')
-        out_file_name = f'{name}.mp4'
-        while out_file_name in os.listdir(save_path):
-            out_file_name = '新' + out_file_name
-        f = open(path + 'file_list.txt', 'w+', encoding="utf-8")
-        for one in file_names:
-            # f.write(f"{path}/{one}\n")
-            f.write("file '" +path+"/"+ one + "'\n")
-        f.close()
-        print("生成txt文件成功!")
-        start = datetime.now()
-        print('开始合成，初始时间为:', datetime.now())
-        # ffmpeg_bin_dic = 'D:/sofeware/ffmpeg-2023-11-20-git-e56d91f8a8-essentials_build/bin'
 
-        # os.system(
-        #     ffmpeg_bin_dic + 'ffmpeg -f concat -safe 0 -i ' + path + 'file_list.txt' + ' -c ' + ' copy ' + save_path + out_file_name)
-        # input_string = 'concat:{' + '|'.join(filelist)+'}'
-        # print(input_string)
-        # command = ['ffmpeg', '-i', path + '/file_list.txt', '-c', 'copy', f"{save_path}/{name}.mp4"]
-        pathText=save_path+"/file_list.txt"
-        savetxt=f"{save_path}/{name}.mp4"
-        cmd_code = f'ffmpeg -f concat -safe 0 -y -i {pathText} -c copy -strict -2 {savetxt}'
-        cmd = "ffmpeg -i {} -c copy {}".format(pathText, savetxt)
-        print(cmd_code)
-        subprocess.run(cmd)
-        print('合成后的当前时间为：', datetime.now())
-        print('合成视频完成！用时：' + str(datetime.now() - start))
+
+
