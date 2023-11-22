@@ -73,9 +73,17 @@ class Merge(MainQuit):
         editName.grid(row=rowNum, column=1, columnspan=2, sticky=mSticky, pady=4)
 
         rowNum += 1
+        Label(master=root, text="保存格式:", font=mFont, relief=mRlief).grid(row=rowNum, column=0, sticky=mSticky,
+                                                                             pady=4)
+        comboboxCopySaveType = ttk.Combobox(font=mFont, master=root, justify=tk.CENTER)
+        comboboxCopySaveType.grid(row=rowNum, column=1, sticky=mSticky, pady=4)
+        comboboxCopySaveType['values'] = ["TS", "MP4"]
+        comboboxCopySaveType['state'] = "readonly"
+        comboboxCopySaveType.config(font=mFont)
+        comboboxCopySaveType.current(0)
         Button(master=root, text="copy /b 合成", font=mFont, relief=mRlief,
-               command=lambda: self.mergefunction(selectTsFileTv, savceFileTsTV, editName, showContext)).grid(
-            row=rowNum, column=0, columnspan=3,
+               command=lambda: self.mergefunction(selectTsFileTv, savceFileTsTV, editName, comboboxCopySaveType,showContext)).grid(
+            row=rowNum, column=2,
             sticky=mSticky,
             pady=4)
         rowNum += 1
@@ -85,6 +93,7 @@ class Merge(MainQuit):
         comboboxSaveType.grid(row=rowNum, column=1, sticky=mSticky, pady=4)
         comboboxSaveType['values'] = ["TS", "MP4"]
         comboboxSaveType['state'] = "readonly"
+        comboboxCopySaveType.config(font=mFont)
         comboboxSaveType.current(0)
         Button(master=root, text="ffmpeg  合成", font=mFont, relief=mRlief,
                command=lambda: self.mergefunctionffmpeg(selectTsFileTv, savceFileTsTV, editName, comboboxSaveType,showContext)).grid(
@@ -100,7 +109,7 @@ class Merge(MainQuit):
 
     pass
 
-    def mergefunction(self, selectTsFileTv, savceFileTsTV, editName, showContext):
+    def mergefunction(self, selectTsFileTv, savceFileTsTV, editName, comboboxCopySaveType,showContext):
         selectTsFile = selectTsFileTv.cget("text")
         if selectTsFile == "" or savceFileTsTV is None:
             self.setTvContext(showContext, "========Waring========\n   请选择文件目录", TypeBgColor.waring)
@@ -114,7 +123,8 @@ class Merge(MainQuit):
         if name == "" or name is None:
             self.setTvContext(showContext, "========Waring========\n   请输入保持的名称", TypeBgColor.waring)
             return
-        savetxt = f"{saveTsFile}/{name}.ts"
+        savetype = comboboxCopySaveType.get()
+        savetxt = f"{saveTsFile}/{name}.{savetype.lower()}"
         pathlist = selectTsFile + "/*.ts"
         print(f"savetxt=={savetxt}")
         print(f"pathlist=={selectTsFile}")
@@ -147,7 +157,7 @@ class Merge(MainQuit):
             self.setTvContext(showContext,"========Waring========\n   选择的目录下没有ts文件", TypeBgColor.waring)
             return
         selectPath.sort()
-        start = datetime.now()
+        # start = datetime.now()
         # print('开始合成，初始时间为:', datetime.now())
         savetype = comboboxSaveType.get()
         pathlist = saveTsFile + f"/{name}.{savetype.lower()}"
