@@ -26,18 +26,19 @@ class StartBaiduWebTest():
     def sleepTime(self,timenumber):
         time.sleep(timenumber)
 
-    def startFireFox(self):
+    def startFireFox(self,fromlang,tolang):
         driver = webdriver.Firefox()
         # url1 = "https://fanyi.baidu.com/translate?aldtype=16047&query=&keyfrom=baidu&smartresult=dict&#auto/zh/"
-        url1 = "https://fanyi.baidu.com/translate?aldtype=16047&query=&keyfrom=baidu&smartresult=dict&#jp/zh/"
+        url1 = f"https://fanyi.baidu.com/translate?aldtype=16047&query=&keyfrom=baidu&smartresult=dict&#{fromlang}/{tolang}/"
         # driver.get("https://fanyi.baidu.com/translate?aldtype=16047&query=&keyfrom=baidu&smartresult=dict&#jp/zh/")
+        print(f"url=={url1}")
         driver.get(url1)
         driver.refresh()
         return driver
-    def getTranslateData(self,input,driver):
+    def getTranslateData(self,input,fromlang,tolang,driver):
         try:
             if driver is None:
-                driver=self.startFireFox()
+                driver=self.startFireFox(fromlang,tolang)
             inputText = driver.find_element(by=By.ID, value='baidu_translate_input')
             inputText.send_keys(input)
             self.sleepTime(3)
@@ -52,7 +53,7 @@ class StartBaiduWebTest():
             driver.refresh()
             self.sleepTime(4)
             print(f"findelemali {e}")
-            self.getTranslateData(input,driver)
+            self.getTranslateData(input,fromlang,tolang,driver)
         # inputText.clear()
 
 

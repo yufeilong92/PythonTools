@@ -2,8 +2,10 @@ import hashlib
 import json
 import os
 import random
+import re
 import time
 from tkinter import *
+
 
 from Base.FileDialogType import FileDialogType
 from Base.MainQuit import MainQuit
@@ -50,6 +52,7 @@ class TranslateToolsWeb(MainQuit):
         comboboxSavelog.grid(row=rowNum, column=1, columnspan=2, sticky=mSticky, pady=4)
         comboboxSavelog['values'] = ["是", "否"]
         comboboxSavelog['state'] = "readonly"
+        comboboxSavelog.config(font=mFont)
         comboboxSavelog.current(1)
 
         rowNum += 1
@@ -73,8 +76,9 @@ class TranslateToolsWeb(MainQuit):
                                                                              pady=4)
         combobox = ttk.Combobox(font=mFont, master=root, justify=tk.CENTER)
         combobox.grid(row=rowNum, column=1, sticky=mSticky, pady=4)
-        combobox['values'] = ["日语--中文", "英语--中文", "中文--日语", "中文--英语"]
+        combobox['values'] = ["日语--中文", "英语--中文", "中文--日语", "中文--英语","自动检测"]
         combobox['state'] = "readonly"
+        combobox.config(font=mFont)
         combobox.current(0)
         Button(master=root, text="翻译", font=mFont, relief=mRlief,
                command=lambda: self.translateApp(combobox, selectExcelTV, showContext, comboboxSavelog, logPathTv,
@@ -120,29 +124,33 @@ class TranslateToolsWeb(MainQuit):
             self.setTvContext(showContext, "===========Error==========\n   选择目录下没有文件", TypeBgColor.error)
             return
         selectTranslate = combobox.get()
-        fromlang = 'ja'
-        tolang = 'zh-CHS'
+        fromlang = 'jp'
+        tolang = 'zh'
         if selectTranslate == "日语--中文":
-            fromlang = 'ja'
-            tolang = 'zh-CHS'
+            fromlang = 'jp'
+            tolang = 'zh'
             pass
         elif selectTranslate == "英语--中文":
             fromlang = 'en'
-            tolang = 'zh-CHS'
+            tolang = 'zh'
             pass
         elif selectTranslate == "中文--日语":
-            fromlang = 'zh-CHS'
-            tolang = 'ja'
+            fromlang = 'zh'
+            tolang = 'jp'
             pass
         elif selectTranslate == "中文--英语":
-            fromlang = 'zh-CHS'
+            fromlang = 'zh'
             tolang = 'en'
             pass
+        elif selectTranslate=="自动检测":
+            fromlang = 'auto'
+            tolang = 'zh'
         else:
             fromlang = 'ja'
             tolang = 'zh-CHS'
         startWebBaidu = StartBaiduWebTest()
-        driver = startWebBaidu.startFireFox()
+        print(f"{selectTranslate}=={fromlang}=={tolang}")
+        driver = startWebBaidu.startFireFox(fromlang,tolang)
         time.sleep(4)
         for item in listdir:
             self.startTransta(selectPath, item, fromlang, tolang, showContext, startWebBaidu, driver, isSaveLog, pathlog)
@@ -150,15 +158,29 @@ class TranslateToolsWeb(MainQuit):
         pass
 
     def startTransta(self, selectPath, item, fromlang, tolang, showContext, startWebBaidu, driver, isSaveLog, pathlog):
-        split = item.split(".mp4")
+        if item.find(".mp4")!=-1:
+            split = item.split(".mp4")
+            translate = split[0].strip()
+        elif item.find(".ts")!=-1:
+            split = item.split(".ts")
+            translate = split[0].strip()
+        elif item.find(".txt")!=-1:
+            split = item.split(".txt")
+            translate = split[0].strip()
+        else:
+            translate=item
+        # print(f"原文件=={item}\n.mp4=={find}over\n")
+        # find = item.find(".ts")
+        # print(f"原文件=={item}\n.ts=={find}over\n")
+        # find = item.find(".txt")
+        # print(f"原文件=={item}\n.txt=={find}over\n")
+
         oldPath = selectPath + "/" + item
 
-        content = split[0].strip()
         # str1=' /.●~)(。…】【AQWERTYUIOPLKJHGFDSAZXCVBNM,.:`_=-+/;qwertyuiopasdfghjklzxcvbnm'
         # str1=' /.●~)(。…】【,.:`_=-+/;'
         # table = str.maketrans('', '', str1)
         # translate = content.translate(table)
-        translate = content
         # content.replace("/","")
         # content.replace(".","")
         # content.replace("●","")
@@ -175,12 +197,12 @@ class TranslateToolsWeb(MainQuit):
         # return
         if translate == "" or translate is None:
             return
-        result = startWebBaidu.getTranslateData(translate, driver)
+        result = startWebBaidu.getTranslateData(translate,fromlang,tolang, driver)
         if result is None:
             time.sleep(1)
             driver.refresh()
             time.sleep(5)
-            result = startWebBaidu.getTranslateData(translate, driver)
+            result = startWebBaidu.getTranslateData(translate,fromlang,tolang, driver)
         if result is None:
             return
 
