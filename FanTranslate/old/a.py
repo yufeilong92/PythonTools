@@ -27,8 +27,11 @@ if __name__ == '__main__':
     #         fileStr+=f"{listdir[index]}|"
     #
     # print(f"fileStr=={fileStr}")
-    sta="asdada asda sdasda ads "
-    sub = re.sub(r'\s+',"", sta)
+    # sta="asdada asda sdasda ads 1513113321"
+    # sta="[]['/.//.12.3/.//“？？{}}》《》？，"
+    sta="FC2PPV-3299161めっちゃ可愛いアイドルFACEに天使のようなヒロイン美女と天然光の下で・・・"
+    sub = re.sub(r'\s+|[，。、|/・？]|[1-9]|[A-Z]*',"", sta)
+
     print(sub)
     # f=open("D:/printlog/aa.txt",'a')
     # print("asdadsa",file=f)

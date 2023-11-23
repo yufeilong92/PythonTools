@@ -4,6 +4,7 @@
 # @Author  : backpacker
 # @File    : MainQuit.py
 # @Description : $主窗口监听
+import re
 from enum import Enum
 from tkinter import  *
 
@@ -92,3 +93,6 @@ class MainQuit:
             f.close()
         except Exception as e :
             print(e)
+    def mattchData(self,context):
+        translate = re.sub(r'\s+|[●⚫/.~)(。…_=+;・？！]', "", context)
+        return translate

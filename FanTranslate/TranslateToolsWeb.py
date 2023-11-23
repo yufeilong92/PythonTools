@@ -188,6 +188,7 @@ class TranslateToolsWeb(MainQuit):
         # content.replace(")","")
         # content.replace("(","")
         # content.replace("。","")
+        translate = self.mattchData(translate)
         if isSaveLog and pathlog !="" :
             self.saveLog(pathlog,f"翻译前的数据=={translate}")
         print(f"翻译前的数据=={translate}\n",f"翻译前的数据=={translate}\n")
@@ -197,6 +198,7 @@ class TranslateToolsWeb(MainQuit):
         # return
         if translate == "" or translate is None:
             return
+
         result = startWebBaidu.getTranslateData(translate,fromlang,tolang, driver)
         if result is None:
             time.sleep(1)
