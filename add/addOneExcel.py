@@ -5,6 +5,7 @@
 # @File    : addOneExcel.py
 # @Description : $
 import os
+import re
 from base64 import encode, decode
 from time import sleep
 from tkinter import Tk, filedialog, messagebox
@@ -257,6 +258,8 @@ class AddOneExecle(MainQuit):
                     return
                 # self.setTvContext(showContext, f"温馨提示\n========Success========\n数据{oneData}{twoData}可以添加")
                         #=============保存=============
+            oneData = re.sub(r'\s+', "",oneData)
+            twoData = re.sub(r'\s+', "",twoData)
             sh.cell(row=rowsOne , column=1).value = f"{oneData}"
             sh.cell(row=rowsOne , column=2).value = f"{twoData}"
 
@@ -338,7 +341,7 @@ class AddOneExecle(MainQuit):
         context=win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
         win32clipboard.CloseClipboard()
         print(f"拷贝数one=={context}")
-
+        context = re.sub(r'\s+',"", context)
         createNameOneEt.insert(0, context)
         self.setTvContext(showContext, "", TypeBgColor.info)
         self.queryList(selectExcelTV, createExcelFileTV, createNameEt, createNameOneEt, createNameTwoEt, showContext)
@@ -351,7 +354,7 @@ class AddOneExecle(MainQuit):
         context=win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
         win32clipboard.CloseClipboard()
         print(f"拷贝数two=={context}")
-
+        context = re.sub(r'\s+',"", context)
         createNameTwoEt.insert(0,context)
         self.setTvContext(showContext, "", TypeBgColor.info)
         if createNameOneEt.get()=="":

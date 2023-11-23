@@ -1,6 +1,7 @@
 
 import logging
 import os
+import re
 import subprocess
 
 if __name__ == '__main__':
@@ -15,17 +16,20 @@ if __name__ == '__main__':
     # sr="E:/ffmpeg/video/新建文件夹/1.ts"
     # replace = sr.replace("/", "\\")
     # print(replace)
-    listdir = os.listdir("E:/ffmpeg/video/新建文件夹/merge")
-    fileStr = "concat:"
-    len__ = listdir.__len__()
-    for index in range(len__):
-        print(f"index=={index}")
-        if index==len__-1:
-            fileStr+=f"{listdir[index]}"
-        else:
-            fileStr+=f"{listdir[index]}|"
-
-    print(f"fileStr=={fileStr}")
+    # listdir = os.listdir("E:/ffmpeg/video/新建文件夹/merge")
+    # fileStr = "concat:"
+    # len__ = listdir.__len__()
+    # for index in range(len__):
+    #     print(f"index=={index}")
+    #     if index==len__-1:
+    #         fileStr+=f"{listdir[index]}"
+    #     else:
+    #         fileStr+=f"{listdir[index]}|"
+    #
+    # print(f"fileStr=={fileStr}")
+    sta="asdada asda sdasda ads "
+    sub = re.sub(r'\s+',"", sta)
+    print(sub)
     # f=open("D:/printlog/aa.txt",'a')
     # print("asdadsa",file=f)
     # f.close()
