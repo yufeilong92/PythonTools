@@ -29,10 +29,10 @@ if __name__ == '__main__':
     # print(f"fileStr=={fileStr}")
     # sta="asdada asda sdasda ads 1513113321"
     # sta="[]['/.//.12.3/.//“？？{}}》《》？，"
-    sta="FC2PPV-3299161めっちゃ可愛いアイドルFACEに天使のようなヒロイン美女と天然光の下で・・・"
-    sub = re.sub(r'\s+|[，。、|/・？]|[1-9]|[A-Z]*',"", sta)
-
-    print(sub)
+    sta="MIDD-962 [无码破解] 桃尻グラマラス 大橋未久"
+    # sub = re.sub("[~%&',;=?$\x22]|[~\x22]","", sta)
+    translate = re.sub(r'\s+|[●⚫/.~)(。…_=+;・？！]|[\\;*?,"<>|]', "", sta)
+    print(translate)
     # f=open("D:/printlog/aa.txt",'a')
     # print("asdadsa",file=f)
     # f.close()
