@@ -259,7 +259,6 @@ class AddOneExecle(MainQuit):
                 # self.setTvContext(showContext, f"温馨提示\n========Success========\n数据{oneData}{twoData}可以添加")
                         #=============保存=============
             oneData=self.mattchData(oneData)
-            twoData=self.mattchData(twoData)
             sh.cell(row=rowsOne , column=1).value = f"{oneData}"
             sh.cell(row=rowsOne , column=2).value = f"{twoData}"
 
@@ -354,7 +353,6 @@ class AddOneExecle(MainQuit):
         context=win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
         win32clipboard.CloseClipboard()
         print(f"拷贝数two=={context}")
-        context=self.mattchData(context)
         createNameTwoEt.insert(0,context)
         self.setTvContext(showContext, "", TypeBgColor.info)
         if createNameOneEt.get()=="":
