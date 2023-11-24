@@ -15,6 +15,8 @@ from tkinter import ttk
 import tkinter as tk
 import sys
 
+from FanTranslate.StartYouDaoWeb import StartYouDaoWeb
+
 sys.stdout = sys.stdout
 from Base.TypeBgColor import TypeBgColor
 from FanTranslate.StartBaiduWebTest import StartBaiduWebTest
@@ -72,7 +74,7 @@ class TranslateToolsWeb(MainQuit):
         edit.grid(row=rowNum, column=1, columnspan=2, sticky=mSticky, pady=4)
 
         rowNum += 1
-        Label(master=root, text="选择翻译:", font=mFont, relief=mRlief).grid(row=rowNum, column=0, sticky=mSticky,
+        Label(master=root, text="BaiDu翻译:", font=mFont, relief=mRlief).grid(row=rowNum, column=0, sticky=mSticky,
                                                                              pady=4)
         combobox = ttk.Combobox(font=mFont, master=root, justify=tk.CENTER)
         combobox.grid(row=rowNum, column=1, sticky=mSticky, pady=4)
@@ -82,7 +84,21 @@ class TranslateToolsWeb(MainQuit):
         combobox.current(0)
         Button(master=root, text="翻译", font=mFont, relief=mRlief,
                command=lambda: self.translateApp(combobox, selectExcelTV, showContext, comboboxSavelog, logPathTv,
-                                                 edit)).grid(row=rowNum, column=2, sticky=mSticky,
+                                                 edit,True)).grid(row=rowNum, column=2, sticky=mSticky,
+                                                             pady=4)
+
+        rowNum += 1
+        Label(master=root, text="YouDao翻译:", font=mFont, relief=mRlief).grid(row=rowNum, column=0, sticky=mSticky,
+                                                                             pady=4)
+        combobox = ttk.Combobox(font=mFont, master=root, justify=tk.CENTER)
+        combobox.grid(row=rowNum, column=1, sticky=mSticky, pady=4)
+        combobox['values'] = ["日语--中文", "英语--中文", "中文--日语", "中文--英语","自动检测"]
+        combobox['state'] = "readonly"
+        combobox.config(font=mFont)
+        combobox.current(0)
+        Button(master=root, text="翻译", font=mFont, relief=mRlief,
+               command=lambda: self.translateApp(combobox, selectExcelTV, showContext, comboboxSavelog, logPathTv,
+                                                 edit,False)).grid(row=rowNum, column=2, sticky=mSticky,
                                                              pady=4)
 
         rowNum += 1
@@ -93,7 +109,7 @@ class TranslateToolsWeb(MainQuit):
         pass
 
     def translateApp(self, combobox: COMMAND, selectExcelTV: Label, showContext: Label, comboboxSavelog, logPathTv,
-                     edit):
+                     edit,isBaid):
         # 判断是否要保存日志
         savelog = comboboxSavelog.get()
         isSaveLog = False
@@ -126,49 +142,55 @@ class TranslateToolsWeb(MainQuit):
         selectTranslate = combobox.get()
         fromlang = 'jp'
         tolang = 'zh'
+        translateIndex=0
         if selectTranslate == "日语--中文":
             fromlang = 'jp'
             tolang = 'zh'
+            translateIndex=8
             pass
         elif selectTranslate == "英语--中文":
+            translateIndex =7
             fromlang = 'en'
             tolang = 'zh'
             pass
         elif selectTranslate == "中文--日语":
+            translateIndex = 2
             fromlang = 'zh'
             tolang = 'jp'
             pass
         elif selectTranslate == "中文--英语":
+            translateIndex=1
             fromlang = 'zh'
             tolang = 'en'
             pass
         elif selectTranslate=="自动检测":
+            translateIndex = 0
             fromlang = 'auto'
             tolang = 'zh'
         else:
             fromlang = 'ja'
             tolang = 'zh-CHS'
-        startWebBaidu = StartBaiduWebTest()
-        print(f"{selectTranslate}=={fromlang}=={tolang}")
-        driver = startWebBaidu.startFireFox(fromlang,tolang)
-        time.sleep(4)
-        for item in listdir:
-            self.startTransta(selectPath, item, fromlang, tolang, showContext, startWebBaidu, driver, isSaveLog, pathlog)
-            time.sleep(1)
+            translateIndex = 0
+        if isBaid:
+            startWebBaidu = StartBaiduWebTest()
+            print(f"{selectTranslate}=={fromlang}=={tolang}")
+            driver = startWebBaidu.startFireFox(fromlang,tolang)
+            time.sleep(4)
+            for item in listdir:
+                self.startTransta(selectPath, item, fromlang, tolang, showContext, startWebBaidu, driver, isSaveLog, pathlog)
+                time.sleep(1)
+        else:
+            startWebyoudao = StartYouDaoWeb()
+            print(f"{selectTranslate}=={fromlang}=={tolang}")
+            driver = startWebyoudao.startFireFox(translateIndex)
+            time.sleep(4)
+            for item in listdir:
+                self.startTranstaYouDao(selectPath, item, translateIndex, showContext, startWebyoudao, driver, isSaveLog,pathlog)
+                time.sleep(1)
         pass
 
     def startTransta(self, selectPath, item, fromlang, tolang, showContext, startWebBaidu, driver, isSaveLog, pathlog):
-        if item.find(".mp4")!=-1:
-            split = item.split(".mp4")
-            translate = split[0].strip()
-        elif item.find(".ts")!=-1:
-            split = item.split(".ts")
-            translate = split[0].strip()
-        elif item.find(".txt")!=-1:
-            split = item.split(".txt")
-            translate = split[0].strip()
-        else:
-            translate=item
+        translate=self.splitData(item)
         # print(f"原文件=={item}\n.mp4=={find}over\n")
         # find = item.find(".ts")
         # print(f"原文件=={item}\n.ts=={find}over\n")
@@ -191,7 +213,7 @@ class TranslateToolsWeb(MainQuit):
         translate = self.mattchData(translate)
         if isSaveLog and pathlog !="" :
             self.saveLog(pathlog,f"翻译前的数据=={translate}")
-        print(f"翻译前的数据=={translate}\n",f"翻译前的数据=={translate}\n")
+        print(f"翻译前的数据=={translate}\n")
         # tanslateall=Translator("zh","autodetect")
         # result=tanslateall.translate(translate)
         # print(result)
@@ -232,7 +254,71 @@ class TranslateToolsWeb(MainQuit):
             print(f"抛出异常=={e}\n")
         self.setTvContext(showContext, f"===========Success==========\n  {oldPath}\n替换成{newPath}\n",TypeBgColor.Success)
         pass
+    def startTranstaYouDao(self, selectPath, item, indexTranslate, showContext, startWebyoudao, driver, isSaveLog, pathlog):
+        translate=self.splitData(item)
+        # print(f"原文件=={item}\n.mp4=={find}over\n")
+        # find = item.find(".ts")
+        # print(f"原文件=={item}\n.ts=={find}over\n")
+        # find = item.find(".txt")
+        # print(f"原文件=={item}\n.txt=={find}over\n")
 
+        oldPath = selectPath + "/" + item
+
+        # str1=' /.●~)(。…】【AQWERTYUIOPLKJHGFDSAZXCVBNM,.:`_=-+/;qwertyuiopasdfghjklzxcvbnm'
+        # str1=' /.●~)(。…】【,.:`_=-+/;'
+        # table = str.maketrans('', '', str1)
+        # translate = content.translate(table)
+        # content.replace("/","")
+        # content.replace(".","")
+        # content.replace("●","")
+        # content.replace("~","")
+        # content.replace(")","")
+        # content.replace("(","")
+        # content.replace("。","")
+        translate = self.mattchData(translate)
+        if isSaveLog and pathlog !="" :
+            self.saveLog(pathlog,f"翻译前的数据=={translate}")
+        print(f"翻译前的数据=={translate}\n")
+        # tanslateall=Translator("zh","autodetect")
+        # result=tanslateall.translate(translate)
+        # print(result)
+        # return
+        if translate == "" or translate is None:
+            return
+
+        result = startWebyoudao.getTranslateData(translate,indexTranslate, driver)
+        if result is None:
+            time.sleep(1)
+            driver.refresh()
+            time.sleep(5)
+            result = startWebyoudao.getTranslateData(translate,indexTranslate, driver)
+        if result is None:
+            return
+
+        if isSaveLog and pathlog !="":
+            self.saveLog(pathlog, f"翻译的结果=={result}")
+        print(f"翻译的结果=={result}\n")
+        newPath = selectPath + "/" + result.strip() + ".mp4"
+        # print(f"old={oldPath} \n=====\nnewpath={newPath}")
+        try:
+
+            if not os.path.exists(newPath) and os.path.exists(oldPath):
+                if isSaveLog and pathlog !="":
+                    self.saveLog(pathlog, f"====不存在{newPath}===")
+                print(f"====不存在{newPath}===\n")
+                os.rename(oldPath, newPath)
+            else:
+                if isSaveLog and pathlog !="":
+                    self.saveLog(pathlog, f"<<<{newPath}存在>>>")
+                print(f"<<<{newPath}存在>>>\n")
+                # self.setTvContext(showContext, f"===========wring==========\n   {newPath}文件已经存在", TypeBgColor.waring)
+                return
+        except Exception as e:
+            if isSaveLog and pathlog !="":
+                self.saveLog(pathlog, f"抛出异常=={e}")
+            print(f"抛出异常=={e}\n")
+        self.setTvContext(showContext, f"===========Success==========\n  {oldPath}\n替换成{newPath}\n",TypeBgColor.Success)
+        pass
     def adbSelectFileOne(self, selectExcelTV, showcontxt):
         self.setTvContext(showcontxt, "", TypeBgColor.defend)
         pathNum = filedialog.askdirectory()
@@ -240,3 +326,16 @@ class TranslateToolsWeb(MainQuit):
             return
         selectExcelTV.config(text=f"{pathNum}")
         pass
+    def splitData(self,item):
+        if item.find(".mp4")!=-1:
+            split = item.split(".mp4")
+            translate = split[0].strip()
+        elif item.find(".ts")!=-1:
+            split = item.split(".ts")
+            translate = split[0].strip()
+        elif item.find(".txt")!=-1:
+            split = item.split(".txt")
+            translate = split[0].strip()
+        else:
+            translate=item
+        return translate
