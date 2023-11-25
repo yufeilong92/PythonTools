@@ -1,5 +1,6 @@
 import os
 import subprocess
+import time
 from datetime import datetime
 
 from Base.FileDialogType import FileDialogType
@@ -162,15 +163,29 @@ class Merge(MainQuit):
         savetype = comboboxSaveType.get()
         pathlist = saveTsFile + f"/{name}.{savetype.lower()}"
         fileStr = "concat:"
-        for index in range(len__):
-            print(f"index=={index}")
-            if index == len__ - 1:
-                fileStr += f"{selectTsFile}/{selectPath[index]}"
-            else:
-                fileStr += f"{selectTsFile}/{selectPath[index]}|"
+        # for index in range(len__):
+        #     print(f"index=={index}")
+        #     if index == len__ - 1:
+        #         fileStr += f"{selectTsFile}/{selectPath[index]}"
+        #     else:
+        #         fileStr += f"{selectTsFile}/{selectPath[index]}|"
 
+        if 'file_list.txt' in selectPath:
+            os.remove(saveTsFile + 'file_list.txt')
+
+        f = open(saveTsFile + '/file_list.txt', 'w+')
+
+        for index in selectPath:
+            f.write("file '"+f"{selectTsFile}/{index}"+"'\n")
+        time.sleep(1)
+        # for one in file_names:
+        #     f.write("file '" + one + "'\n")
+        filenme = saveTsFile + f"/file_list.txt"
         # cmdd = f"ffmpeg -i "concat:1.ts|2.ts" -c copy output.mp4"
-        cmdd = f"ffmpeg -i \"{fileStr}\" -c copy {pathlist}"
+        print(f"filename =={filenme}")
+        # cmdd = f"ffmpeg -i \"{fileStr}\" -c copy {pathlist}"
+        cmdd = f"ffmpeg -f concat -safe 0 -i \"{filenme}\" -c copy {pathlist}"
+        print(cmdd)
         os.system(f"start cmd.exe /k   {cmdd}")
         # print('合成后的当前时间为：', datetime.now())
         # print('合成视频完成！用时：' + str(datetime.now() - start))
