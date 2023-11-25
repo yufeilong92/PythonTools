@@ -3,6 +3,8 @@ import subprocess
 import time
 from datetime import datetime
 
+from win32comext.shell import shellcon, shell
+
 from Base.FileDialogType import FileDialogType
 from Base.MainQuit import MainQuit
 from tkinter import Tk, filedialog, ttk
@@ -100,6 +102,11 @@ class Merge(MainQuit):
                command=lambda: self.mergefunctionffmpeg(selectTsFileTv, savceFileTsTV, editName, comboboxSaveType,showContext)).grid(
             row=rowNum, column=2, sticky=mSticky,
             pady=4)
+
+        rowNum += 1
+        Button(master=root, text="删除FFmpeg 合成txt文件", font=mFont, relief=mRlief,
+               command=lambda: self.delecetFfmpegTxt(selectTsFileTv,showContext)).grid(row=rowNum, column=0,columnspan=3, sticky=mSticky,
+                                                                  pady=4)
         rowNum += 1
         showContext = Label(master=root, height=10, font=mFont, wraplength=600, bg="#5EA4DE")
         showContext.grid(row=rowNum, column=0, columnspan=3, sticky=mSticky, pady=4)
@@ -191,6 +198,31 @@ class Merge(MainQuit):
         # print('合成视频完成！用时：' + str(datetime.now() - start))
         self.setTvContext(showContext, "========Success========\n   执行成功", TypeBgColor.Success)
         pass
+
+        pass
+
+    def delecetFfmpegTxt(self, selectTsFileTv, showContext):
+        selectPath = selectTsFileTv.cget("text")
+        if selectPath=="" or selectPath is None:
+            self.setTvContext(showContext, "========Waring========\n   请选择文件目录", TypeBgColor.waring)
+            return
+
+        path=selectPath+"/file_list.txt"
+        if os.path.exists(path):
+            listdir = os.listdir(selectPath)
+            for item in listdir:
+                # os.remove(selectPath+"/"+item)
+                res = shell.SHFileOperation((0, shellcon.FO_DELETE, selectPath+"/"+item, None,
+                                             shellcon.FOF_SILENT | shellcon.FOF_ALLOWUNDO | shellcon.FOF_NOCONFIRMATION,
+                                             None, None))  # 删除文件到回收站
+                if not res[1]:
+                    os.system('del ' + selectPath+"/"+item)
+
+
+            self.setTvContext(showContext, "========Success========\n   删除成功", TypeBgColor.Success)
+        else:
+            self.setTvContext(showContext, f"========Waring========\n   {path}删除文件不存在", TypeBgColor.waring)
+
 
         pass
 
