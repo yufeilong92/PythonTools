@@ -191,7 +191,7 @@ class Merge(MainQuit):
         # cmdd = f"ffmpeg -i "concat:1.ts|2.ts" -c copy output.mp4"
         print(f"filename =={filenme}")
         # cmdd = f"ffmpeg -i \"{fileStr}\" -c copy {pathlist}"
-        cmdd = f"ffmpeg -f concat -safe 0 -i \"{filenme}\" -c copy {pathlist}"
+        cmdd = f"ffmpeg -f concat -safe 0 -i  \"{filenme}\" -c copy {pathlist}"
         print(cmdd)
         os.system(f"start cmd.exe /k   {cmdd}")
         # print('合成后的当前时间为：', datetime.now())
