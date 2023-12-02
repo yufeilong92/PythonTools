@@ -96,7 +96,7 @@ class Merge(MainQuit):
         comboboxSaveType.grid(row=rowNum, column=1, sticky=mSticky, pady=4)
         comboboxSaveType['values'] = ["TS", "MP4"]
         comboboxSaveType['state'] = "readonly"
-        comboboxCopySaveType.config(font=mFont)
+        comboboxSaveType.config(font=mFont)
         comboboxSaveType.current(0)
         Button(master=root, text="ffmpeg  合成", font=mFont, relief=mRlief,
                command=lambda: self.mergefunctionffmpeg(selectTsFileTv, savceFileTsTV, editName, comboboxSaveType,showContext)).grid(
