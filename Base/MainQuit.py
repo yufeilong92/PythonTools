@@ -95,4 +95,5 @@ class MainQuit:
             print(e)
     def mattchData(self,context):
         translate = re.sub(r'\s+|[●⚫/.~)(。…_=+;・，？！“”]|[\\;*?,"<>|#]|[），。；‘’]', "", context)
+        # translate = re.sub(r'\s+|[-]', " ", context)
         return translate
