@@ -13,7 +13,7 @@ from ExportFile.QueryRep import QueryRep
 from Base.MainQuit import MainQuit
 from Base.STARTGUI import STARTGUI
 from FanTranslate.TranslateToolsWeb import TranslateToolsWeb
-
+from ExportFile.Mergeconflict import Mergeconflict
 from add.addOneExcel import AddOneExecle
 from colorSelect.ColorSelect import ColorSelect
 from colorSelect.PictureReadTxt import PictureReadTxt
@@ -49,7 +49,9 @@ class Guide(MainQuit):
         elif type == STARTGUI.MERGETS:
             merge = Merge()
             merge.showDialog(root)
-
+        elif type==STARTGUI.MERGECONFLICT:
+            mergeconflict = Mergeconflict()
+            mergeconflict.showDialog(root)
 
     def guideTool(self):
         root = Tk()
@@ -89,6 +91,9 @@ class Guide(MainQuit):
         Button(master=root, text="合成", font=mFont,
                command=lambda: self.startGUI(root, STARTGUI.MERGETS)).grid(
             row=1, column=3, sticky=E + W)
+        Button(master=root, text="查重保存", font=mFont,
+               command=lambda: self.startGUI(root, STARTGUI.MERGECONFLICT)).grid(
+            row=1, column=4, sticky=E + W)
         # =============第二行开始=================
         # Button(master=root, text="颜色选择器",bg=mbg,font=mFont,command=lambda :adbColorSelect()).grid(row=1,column=0,sticky=E+W)
         # ==============================

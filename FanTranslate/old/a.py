@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import subprocess
+import datetime
 
 if __name__ == '__main__':
     # logging.basicConfig(level=logging.ERROR)
@@ -29,10 +30,10 @@ if __name__ == '__main__':
     # print(f"fileStr=={fileStr}")
     # sta="asdada asda sdasda ads 1513113321"
     # sta="[]['/.//.12.3/.//“？？{}}》《》？，"
-    sta="MIDD-962 [无码破解] 桃尻グラマラス 大橋未久"
+    # sta="MIDD-962 [无码破解] 桃尻グラマラス 大橋未久"
     # sub = re.sub("[~%&',;=?$\x22]|[~\x22]","", sta)
-    translate = re.sub(r'\s+|[●⚫/.~)(。…_=+;・？！]|[\\;*?,"<>|]', "", sta)
-    print(translate)
+    #translate = re.sub(r'\s+|[●⚫/.~)(。…_=+;・？！]|[\\;*?,"<>|]', "", sta)
+    print(f"{datetime.datetime.now()}")
     # f=open("D:/printlog/aa.txt",'a')
     # print("asdadsa",file=f)
     # f.close()
