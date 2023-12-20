@@ -326,7 +326,7 @@ class Mergeconflict(MainQuit):
                     return
 
                 wb = Workbook()
-                sh = wb.create_sheet(saveName)
+                sh = wb.create_sheet(saveName,0)
                 sh.cell(row=1, column=1).value = f"{datetime.datetime.now()}=={selectTwoPath}重复数据"
                 for postion in range(len(repead)):
                     sh.cell(row=postion + 2, column=1).value = repead[postion]
