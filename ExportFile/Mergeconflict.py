@@ -311,19 +311,23 @@ class Mergeconflict(MainQuit):
             askyesno = messagebox.askyesno("提示", "是否要保持重复数据")
             print(f"===asno=={askyesno}")
             if askyesno:
-                saveOver = saveNewPath + "/" + saveName + ".xlsx"
-                if os.path.exists(saveOver):
-                    self.showWaring(f"保存的文件{saveName}.xlsx 已经存在")
                 if saveNewPath is None or saveNewPath == "重复文件目录":
                     self.showWaring("请选择重复文件目录")
                     return
-
                 if saveName is None or saveName == "":
                     self.showWaring("请输入新的表名")
                     return
+                saveOver = saveNewPath + "/" + saveName + ".xlsx"
+                if os.path.exists(saveOver):
+                    # self.showWaring(f"保存的文件{saveName}.xlsx 已经存在")
+                    print(f"重复保存的表=={saveOver}")
+
+                    self.saveExcleOne(repeadNo=repead, selectOnePath=saveOver, oneSheet=saveName, selectTwoPath=selectTwoPath,isSheetNameStr=True)
+                    return
+
                 wb = Workbook()
                 sh = wb.create_sheet(saveName)
-                sh.cell(row= 1, column=1).value = f"{datetime.datetime.now()}=={selectTwoPath}重复数据"
+                sh.cell(row=1, column=1).value = f"{datetime.datetime.now()}=={selectTwoPath}重复数据"
                 for postion in range(len(repead)):
                     sh.cell(row=postion + 2, column=1).value = repead[postion]
                 try:
@@ -332,30 +336,31 @@ class Mergeconflict(MainQuit):
                 except:
                     self.showWaring(f"保存的文件{saveOver},正在编辑或者异常")
                     return
-                self.saveExcleOne(repeadNo, selectOnePath, oneSheet,selectTwoPath)
-                if self.showAskQuestion("重复数据保存成功，是否跳转对应目录"):
-                    os.startfile(saveNewPath)
+                self.saveExcleOne(repeadNo, selectOnePath, oneSheet, selectTwoPath,False)
+                # if self.showAskQuestion("重复数据保存成功，是否跳转对应目录"):
+                #     os.startfile(saveNewPath)
             else:
-                self.saveExcleOne(repeadNo, selectOnePath, oneSheet,selectTwoPath)
-    # 执行追加数据
+                self.saveExcleOne(repeadNo, selectOnePath, oneSheet, selectTwoPath,False)
+        # 执行追加数据
         else:
-            self.saveExcleOne(repeadNo, selectOnePath, oneSheet,selectTwoPath)
-
+            self.saveExcleOne(repeadNo, selectOnePath, oneSheet, selectTwoPath,False)
         pass
 
     pass
 
-
-    def saveExcleOne(self, repeadNo, selectOnePath, oneSheet,selectTwoPath):
+    def saveExcleOne(self, repeadNo, selectOnePath, oneSheet, selectTwoPath, isSheetNameStr:bool):
         if repeadNo.__len__() == 0:
-             messagebox.showerror("提示", "无需要保持的数据，合并数据都已存在")
-             return
+            messagebox.showerror("提示", "无需要保持的数据，合并数据都已存在")
+            return
 
         wb: Workbook = None
         # 第一行数据
         wb = load_workbook(selectOnePath)
         mOnesheetnames = wb.sheetnames
-        sheetOne = mOnesheetnames[oneSheet]
+        if isSheetNameStr:
+            sheetOne=oneSheet
+        else:
+            sheetOne = mOnesheetnames[oneSheet]
         print(f"当前表名=={sheetOne}")
         sh = wb[sheetOne]
         rowsOne = sh.max_row + 1
@@ -369,5 +374,5 @@ class Mergeconflict(MainQuit):
             print(e)
             self.showWaring(f"保存的文件{selectOnePath},正在编辑或者异常")
             return
-        messagebox.showinfo("成功",'追加成功')
+        messagebox.showinfo("成功", '追加成功')
         pass
