@@ -110,10 +110,10 @@ class QueryRep(MainQuit):
         mRepVar.set(0)
         Label(master=root, text="保存", font=mFont, relief=mRlief).grid(row=rowIndex, column=0, sticky=mSticky, pady=4)
         Radiobutton(master=root, text="去重的数据", value=0, variable=mRepVar, font=mFont, relief=mRlief,
-                    command=lambda: self.adbRadiobutton(mIntVar, saveTypeTv)).grid(row=rowIndex, column=1,
+                    command=lambda: self.adbRadiobutton(mRepVar, saveTypeTv)).grid(row=rowIndex, column=1,
                                                                                    sticky=mSticky, pady=4)
         Radiobutton(master=root, text="重复的数据", value=1, variable=mRepVar, font=mFont, relief=mRlief,
-                    command=lambda: self.adbRadiobutton(mIntVar, saveTypeTv)).grid(row=rowIndex, column=2,
+                    command=lambda: self.adbRadiobutton(mRepVar, saveTypeTv)).grid(row=rowIndex, column=2,
                                                                                    sticky=mSticky, pady=4)
 
         rowIndex += 1
